@@ -20,8 +20,7 @@ The access to the Service Point display is done via https://github.com/cccb/serv
 
 ### Files
 
-  - `sp.h`, `libsp.a`: derived from https://github.com/cccb/servicepoint,
-    checked in for convenience
+  - `sp.h`, `libsp.a`: derived from https://github.com/cccb/servicepoint, checked in for convenience
   - `servicepoint.h`, `servicepoint.c`: abstraction level to the service point library
   - `graphix.h`, `graphicx.c`: simple X11 window api
   - `display_graphix.h`, `display_graphix.c`: service point display emulation
@@ -36,7 +35,7 @@ The access to the Service Point display is done via https://github.com/cccb/serv
 
     jpg2sp foo.jpg
 
-    mktty | tty2sp g
+    mktty | tty2sp -g -x
 
 ## BSD Game Robots
 
