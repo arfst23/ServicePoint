@@ -35,7 +35,7 @@ The access to the Service Point display is done via https://github.com/cccb/serv
 
     jpg2sp foo.jpg
 
-    mktty | tty2sp -g -x
+    mktty | tty2sp -x -s
 
 ## BSD Game Robots
 
