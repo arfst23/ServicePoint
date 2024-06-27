@@ -1,0 +1,133 @@
+#!/usr/bin/perl -w
+use strict;
+use Time::HiRes 'usleep';
+
+my $del_rot = 200;
+my $del_lines = 300;
+my $del_baut = 150;
+my $del_bar = 250;
+
+################################################################################
+
+sub out($)
+{
+  my ($str) = @_;
+  syswrite(STDOUT, $str);
+}
+
+sub del($)
+{
+  my ($ms) = @_;
+  usleep($ms * 1000);
+}
+
+################################################################################
+
+sub rot($$)
+{
+  my ($msg, $n) = @_;
+  out $msg . '... ';
+  foreach (1..$n)
+  {
+    out "/\b";
+    del $del_rot;
+    out "-\b";
+    del $del_rot;
+    out "\\\b";
+    del $del_rot;
+    out "|\b";
+    del $del_rot;
+  }
+  out "completed\n";
+}
+
+################################################################################
+
+sub lines(@)
+{
+  my (@str) = @_;
+  foreach my $str (@str)
+  {
+    out $str . "\n";
+    del $del_lines;
+  }
+}
+
+################################################################################
+
+sub baut(@)
+{
+  my (@str) = @_;
+  foreach my $str (@str)
+  {
+    my @char = split '', $str;
+    foreach my $char (@char, "\n")
+    {
+      out $char;
+      del $del_baut;
+    }
+  }
+}
+
+################################################################################
+
+sub bar()
+{
+  foreach my $t (0 .. 39)
+  {
+    my $str = ' ' . '=' x $t . '>' . ' ' x (39 - $t) . '| ' . int(100 * $t / 38) . "%\r";
+    out $str;
+    del $del_bar;
+  }
+  my $str = '|' . '=' x 40 . "| done\n";
+  out $str;
+  del $del_bar;
+}
+
+################################################################################
+
+lines "ROM revision 23.5",
+    "",
+    "Host ID A00420",
+    "Watchdog enabled",
+    "";
+
+rot "Checking memory", 3;
+
+lines "32MB avaiable",
+    "Boot device (0, 0)";
+
+rot "Booting", 10;
+
+lines "Kernel revision 42.0",
+      "";
+
+rot "Checking filesystems", 5;
+
+lines "Cache enabled",
+     "",
+     "Starting syslog",
+     "Starting network",
+     "Starting cron",
+     "";
+
+rot "Connecting", 3;
+
+lines "";
+     
+baut "Syncing catalog",
+     "- Hashes",
+     "- Index",
+     "- Timestamps",
+     "";
+
+bar;
+
+lines "",
+      "Disconnected",
+      "",
+      "",
+      "",
+      "READY";
+
+##########################################3840x1600######################################

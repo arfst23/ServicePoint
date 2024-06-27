@@ -1,0 +1,74 @@
+#!/usr/bin/python3
+################################################################################
+
+import sys
+import socket
+
+SCREEN_ROWS = 20
+SCREEN_COLS = 56
+
+ROBOTS_KEY_N = b'k'
+ROBOTS_KEY_NE = b'u'
+ROBOTS_KEY_E = b'l'
+ROBOTS_KEY_SE = b'n'
+ROBOTS_KEY_S = b'j'
+ROBOTS_KEY_SW = b'b'
+ROBOTS_KEY_W = b'h'
+ROBOTS_KEY_NW = b'y'
+ROBOTS_KEY_X = b' '
+
+ROBOTS_EMPTY = ord(' ')
+ROBOTS_ROBOT = ord('+')
+ROBOTS_JUNK = ord('*')
+ROBOTS_PLAYER = ord('O')
+ROBOTS_DEAD = ord('X')
+
+################################################################################
+
+def player(screen):
+  for row in range(SCREEN_ROWS):
+    for col in range(SCREEN_COLS):
+      if screen[row][col] == ROBOTS_PLAYER:
+        return (row, col);
+  return None
+
+def strategy(screen):
+  for line in screen:
+    print(line.decode('latin9') + '<')
+
+  p = player(screen)
+  if p is not None:
+    (row, col) = p
+    print("@ %d/%d" % (row, col))
+
+  return ROBOTS_KEY_SE
+
+################################################################################
+
+LENGTH = (SCREEN_ROWS + 2) * (SCREEN_COLS + 3) + 6;
+
+PORT = 8080
+
+if len(sys.argv) != 2:
+  raise Exception('hostname missing')
+host = sys.argv[1]
+
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+  s.connect((host, PORT))
+  while (True):
+    data = b''
+    while len(data) < LENGTH:
+      data += s.recv(LENGTH - len(data))
+      if len(data) == 0:
+        print('score: ' + str(score))
+        exit(0)
+
+    screen = [ ]
+    for row in range(SCREEN_ROWS):
+      screen.append(data[(row + 1) * (SCREEN_COLS + 3) + 1:(row + 2) * (SCREEN_COLS + 3) - 2])
+    score = int(data[(SCREEN_ROWS + 2) * (SCREEN_COLS + 3):-1].decode('latin9'))
+
+    key = strategy(screen);
+    s.sendall(key)
+
+################################################################################

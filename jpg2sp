@@ -1,0 +1,8 @@
+#!/bin/sh
+
+cat "$@" \
+  | djpeg \
+  | pamscale -xysize 448 236 \
+  | ppmtopgm \
+  | pgmtopbm -floyd \
+  | pbm2sp

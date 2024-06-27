@@ -1,0 +1,11 @@
+mk all pbm
+
+pbm2sp < test.pbm
+
+jpg2sp test.jpg
+
+mktty | tty2sp g
+
+pbms2sp -r frame-??.pbm
+
+robots -t -s -a -w
