@@ -1,7 +1,6 @@
 # Service Point Display at CCCB
 
-The access to the Service Point display is done via
-`https://github.com/cccb/servicepoint`.
+The access to the Service Point display is done via https://github.com/cccb/servicepoint
 
 ## Service Point Display Tools
 
@@ -12,22 +11,22 @@ The access to the Service Point display is done via
   - `jpg2sp`: display a jpeg dithered on the service point display
   - `pbms2sp`: display a series of portable bitmaps looped on the service point display
 
+### Options
+
+  - `-r`: reverse
+  - `-x`: use service point display emulator
+  - `-s`: send to service point display
+  - `-23`: frame delay for pbms2sp
+
 ### Files
 
   - `sp.h`, `libsp.a`: derived from https://github.com/cccb/servicepoint,
     checked in for convenience
   - `servicepoint.h`, `servicepoint.c`: abstraction level to the service point library
   - `graphix.h`, `graphicx.c`: simple X11 window api
-  - `display\_graphix.h`, `display\_graphix.c`: service point display emulation
+  - `display_graphix.h`, `display_graphix.c`: service point display emulation
   - `display.h`, `display.c`: common api for service point display library and emulator
-  - `display\_text.h`, `display\_text.c': client side text rendering on display
-
-### Optionsre
-
-  - `-r`: reverse
-  - `-x`: use service point display emulator
-  - `-s`: send to service point display
-  - `-23`: frame delay for pbms2sp
+  - `display_text.h`, `display_text.c': client side text rendering on display
 
 ### Examples
 
@@ -46,8 +45,8 @@ This is a 56x20 charaters BSD games robots clone.
 ### Files
 
   - `robots.h`, `robots.c`: robots implementation
-  - `robots\_auto.h`, `robots\_auto.c`: solver from arfst23
-  - `robots\_bsd.h`, `robots\_bsd.c`: bsd solver
+  - `robots_auto.h`, `robots_auto.c`: solver from arfst23
+  - `robots_bsd.h`, `robots_bsd.c`: bsd solver
   - `strategy`: python template to solve robots via socket (option `-p`)
 
 ### Options
