@@ -61,48 +61,46 @@ static int distance(int x1, int y1, int x2, int y2)
 //******************************************************************************
 
 // return x coordinate moves
-static int xinc(int dir)
+static int x_inc(int dir)
 {
   switch(dir)
   {
-  case ROBOTS_KEY_SE:
-  case ROBOTS_KEY_E:
   case ROBOTS_KEY_NE:
-    return -1;
-  case ROBOTS_KEY_W:
-  case ROBOTS_KEY_SW:
-  case ROBOTS_KEY_NW:
+  case ROBOTS_KEY_E:
+  case ROBOTS_KEY_SE:
     return 1;
-  case ROBOTS_KEY_S:
   case ROBOTS_KEY_N:
   case ROBOTS_KEY_X:
+  case ROBOTS_KEY_S:
     return 0;
+  case ROBOTS_KEY_NW:
+  case ROBOTS_KEY_W:
+  case ROBOTS_KEY_SW:
+    return -1;
   default:
-    //return 0;
     assert(0);
   }
 }
 
 // return y coordinate moves
-static int yinc(int dir)
+static int y_inc(int dir)
 {
   switch(dir)
   {
-  case ROBOTS_KEY_N:
-  case ROBOTS_KEY_NW:
-  case ROBOTS_KEY_NE:
-    return -1;
-  case ROBOTS_KEY_SE:
-  case ROBOTS_KEY_S:
   case ROBOTS_KEY_SW:
+  case ROBOTS_KEY_S:
+  case ROBOTS_KEY_SE:
     return 1;
-  case ROBOTS_KEY_E:
   case ROBOTS_KEY_W:
   case ROBOTS_KEY_X:
+  case ROBOTS_KEY_E:
     return 0;
+  case ROBOTS_KEY_NW:
+  case ROBOTS_KEY_N:
+  case ROBOTS_KEY_NE:
+    return -1;
   default:
-    //return 0;
-    assert(0);
+  assert(0);
   }
 }
 
@@ -117,21 +115,21 @@ static const char* find_moves()
   if (valid[TO_X])
     *p++ = ROBOTS_KEY_X;
   if (valid[TO_W])
-    *p++ = ROBOTS_KEY_E;
+    *p++ = ROBOTS_KEY_W;
   if (valid[TO_S])
     *p++ = ROBOTS_KEY_S;
   if (valid[TO_N])
     *p++ = ROBOTS_KEY_N;
   if (valid[TO_E])
-    *p++ = ROBOTS_KEY_W;
+    *p++ = ROBOTS_KEY_E;
   if (valid[TO_NW])
-    *p++ = ROBOTS_KEY_NE;
+    *p++ = ROBOTS_KEY_NW;
   if (valid[TO_NE])
     *p++ = ROBOTS_KEY_NW;
   if (valid[TO_SW])
-    *p++ = ROBOTS_KEY_SE;
-  if (valid[TO_SE])
     *p++ = ROBOTS_KEY_SW;
+  if (valid[TO_SE])
+    *p++ = ROBOTS_KEY_SE;
   if (p == ans)
     *p++ = ROBOTS_KEY_TELE;
   *p = '\0';
@@ -194,14 +192,14 @@ static int move_towards(int dx, int dy)
   best_move = valid_moves[0]; 
   if (best_move != ROBOTS_KEY_TELE)
   {
-    int mvx = xinc(best_move);
-    int mvy = yinc(best_move);
-    int move_judge = ABS(mvx - dx) + ABS(mvy - dy);
+    int mv_x = x_inc(best_move);
+    int mv_y = y_inc(best_move);
+    int move_judge = ABS(mv_x - dx) + ABS(mv_y - dy);
     for (char *ptr = &valid_moves[1]; *ptr != '\0'; ptr++)
     {
-      mvx = xinc(*ptr);
-      mvy = yinc(*ptr);
-      int cur_judge = ABS(mvx - dx) + ABS(mvy - dy);
+      mv_x = x_inc(*ptr);
+      mv_y = y_inc(*ptr);
+      int cur_judge = ABS(mv_x - dx) + ABS(mv_y - dy);
       if (cur_judge < move_judge)
       {
 	move_judge = cur_judge;

@@ -59,6 +59,7 @@ This is a 56x20 charaters BSD games robots clone.
   - `-a`: solver by arfst23
   - `-b`: bsd solver
   - `-g`: guided mode (in both solves yield the same key)
+  - `-23`: play number of roounds
 
 ### Examples
 

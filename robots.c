@@ -62,11 +62,14 @@ static int param_in = 0;
 #define ROBOTS_OUT_LOG 4
 #define ROBOTS_OUT_TERM 8
 
-#define ROBOTS_WAIT_LEVEL 750
-#define ROBOTS_WAIT_WAIT 50
-#define ROBOTS_WAIT_MOVE 75
+#define ROBOTS_DELAY_LEVEL 750
+#define ROBOTS_DELAY_WAIT 50
+#define ROBOTS_DELAY_MOVE 75
+#define ROBOTS_DELAY_ROUND 1500
 
 static int param_out = 0;
+
+static int param_rounds = 1;
 
 //******************************************************************************
 // >>> init / level
@@ -81,7 +84,12 @@ void robots_init(robots *state)
   state->level = 0;
   state->score = 0;
 
-  srand(time(NULL));
+  static bool seed_rand = false;
+  if (!seed_rand)
+  {
+    srand(time(NULL));
+    seed_rand = true;
+  }
 }
 
 void robots_level(robots *state)
@@ -403,7 +411,7 @@ static int robots_key_term(__attribute__((unused))robots *state)
 static int robots_key_auto(robots *state)
 {
   if (param_delay)
-    usleep(ROBOTS_WAIT_MOVE * 1000);
+    usleep(ROBOTS_DELAY_MOVE * 1000);
   return robots_strategy_auto(state->screen);
   return 0;
 }
@@ -411,7 +419,7 @@ static int robots_key_auto(robots *state)
 static int robots_key_bsd(robots *state)
 {
   if (param_delay)
-    usleep(ROBOTS_WAIT_MOVE * 1000);
+    usleep(ROBOTS_DELAY_MOVE * 1000);
   return robots_strategy_bsd(state->screen);
   return 0;
 }
@@ -423,7 +431,7 @@ static int robots_key_guided(robots *state)
   if (key_auto == key_bsd)
   {
     if (param_delay)
-      usleep(ROBOTS_WAIT_MOVE * 1000);
+      usleep(ROBOTS_DELAY_MOVE * 1000);
     return key_auto;
   }
   return getchar();
@@ -480,13 +488,16 @@ static int robots_wait(robots *state)
     if (param_delay)
     {
       robots_print(state);
-      usleep(ROBOTS_WAIT_WAIT * 1000);
+      usleep(ROBOTS_DELAY_WAIT * 1000);
     }
   }
 }
 
 static int robots_run(void)
 {
+  if (param_out & ROBOTS_OUT_TERM)
+    term_clear();
+
   robots rob;
   robots_init(&rob);
   robots_level(&rob);
@@ -498,7 +509,7 @@ static int robots_run(void)
       if (param_delay)
       {
 	robots_print(&rob);
-	usleep(ROBOTS_WAIT_LEVEL * 1000);
+	usleep(ROBOTS_DELAY_LEVEL * 1000);
       }
       robots_level(&rob);
     }
@@ -512,6 +523,9 @@ static int robots_run(void)
       key = robots_key_auto(&rob);
     else if (key == ROBOTS_KEY_BSD)
       key = robots_key_bsd(&rob);
+    
+    if (param_out & ROBOTS_OUT_LOG)
+      printf("key: %c\n", key);
 
     if (key == ROBOTS_KEY_N || key == ROBOTS_KEY_NW || key == ROBOTS_KEY_W
 	|| key == ROBOTS_KEY_SW || key == ROBOTS_KEY_S || key == ROBOTS_KEY_SE
@@ -564,6 +578,18 @@ int main(int ac, const char *av[])
     case 'p':
       param_in = ROBOTS_IN_PORT;
       break;
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+      param_rounds = atoi(&av[ai][1]);
+      assert(param_rounds > 0);
+      break;
     default:
       assert(0);
     }
@@ -571,16 +597,21 @@ int main(int ac, const char *av[])
 
   term_raw();
 
-  if (param_out & ROBOTS_OUT_TERM)
-    term_clear();
-
   if (param_out & ROBOTS_OUT_DISP)
     display_create(param_out & ROBOTS_OUT_DISP);
 
   if (param_in == ROBOTS_IN_PORT)
     port_create(ROBOTS_PORT);
 
-  int score = robots_run();
+  for (int round = 0; round < param_rounds; round++)
+  {
+    if (round > 0 && param_delay)
+      usleep(ROBOTS_DELAY_ROUND * 1000);
+
+    int score = robots_run();
+
+    printf("%05d\n", score);
+  }
 
   term_restore();
 
@@ -589,8 +620,6 @@ int main(int ac, const char *av[])
 
   if (param_in == ROBOTS_IN_PORT)
     port_close();
-
-  printf("score: %d\n", score);
 
   return EXIT_SUCCESS;
 }

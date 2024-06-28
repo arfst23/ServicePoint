@@ -188,18 +188,18 @@ static int abovebelow(const char* valid, int selfrow, int minrow, int maxrow,
     if (selfcol < avgcol0)
     {
       if (valid[TO_NE])
-	return ROBOTS_KEY_NW;
+	return ROBOTS_KEY_NE;
       if (valid[TO_E])
-	return ROBOTS_KEY_W;
+	return ROBOTS_KEY_E;
       if (valid[TO_N])
 	return ROBOTS_KEY_N;
     }
     else if (selfcol > avgcol1)
     {
       if (valid[TO_NW])
-	return ROBOTS_KEY_NE;
+	return ROBOTS_KEY_NW;
       if (valid[TO_W])
-	return ROBOTS_KEY_E;
+	return ROBOTS_KEY_W;
       if (valid[TO_N])
 	return ROBOTS_KEY_N;
     }
@@ -208,9 +208,9 @@ static int abovebelow(const char* valid, int selfrow, int minrow, int maxrow,
       if (valid[TO_N])
 	return ROBOTS_KEY_N;
       if (valid[TO_NW])
-	return ROBOTS_KEY_NE;
-      if (valid[TO_NE])
 	return ROBOTS_KEY_NW;
+      if (valid[TO_NE])
+	return ROBOTS_KEY_NE;
     }
   }
   else if (selfrow > maxrow) // below
@@ -218,18 +218,18 @@ static int abovebelow(const char* valid, int selfrow, int minrow, int maxrow,
     if (selfcol < avgcol0)
     {
       if (valid[TO_SE])
-	return ROBOTS_KEY_SW;
+	return ROBOTS_KEY_SE;
       if (valid[TO_E])
-	return ROBOTS_KEY_W;
+	return ROBOTS_KEY_E;
       if (valid[TO_S])
 	return ROBOTS_KEY_S;
     }
     else if (selfcol > avgcol1)
     {
       if (valid[TO_SW])
-	return ROBOTS_KEY_SE;
+	return ROBOTS_KEY_SW;
       if (valid[TO_W])
-	return ROBOTS_KEY_E;
+	return ROBOTS_KEY_W;
       if (valid[TO_S])
 	return ROBOTS_KEY_S;
     }
@@ -238,9 +238,9 @@ static int abovebelow(const char* valid, int selfrow, int minrow, int maxrow,
       if (valid[TO_S])
 	return ROBOTS_KEY_S;
       if (valid[TO_SW])
-	return ROBOTS_KEY_SE;
-      if (valid[TO_SE])
 	return ROBOTS_KEY_SW;
+      if (valid[TO_SE])
+	return ROBOTS_KEY_SE;
     }
   }
   return NIL;
@@ -253,66 +253,66 @@ static int abovebelow(const char* valid, int selfrow, int minrow, int maxrow,
 static int leftrightof(const char* valid, int selfcol, int mincol, int maxcol,
   int selfrow, int avgrow0, int avgrow1)
 {
-  if (selfcol < mincol) // leftofit
-  {
-    if (selfrow < avgrow0)
+    if (selfcol < mincol) // leftofit
     {
-      if (valid[TO_SW])
-	return ROBOTS_KEY_SE;
-      if (valid[TO_S])
-	return ROBOTS_KEY_S;
-      if (valid[TO_W])
-	return ROBOTS_KEY_E;
+      if (selfrow < avgrow0)
+      {
+	if (valid[TO_SW])
+	  return ROBOTS_KEY_SW;
+	if (valid[TO_S])
+	  return ROBOTS_KEY_S;
+	if (valid[TO_W])
+	  return ROBOTS_KEY_W;
+      }
+      else if (selfrow > avgrow1)
+      {
+	if (valid[TO_NW])
+	  return ROBOTS_KEY_NW;
+	if (valid[TO_N])
+	  return ROBOTS_KEY_N;
+	if (valid[TO_W])
+	  return ROBOTS_KEY_W;
+      }
+      else // avgrow0 <= selfrow <= avgrow1
+      {
+	if (valid[TO_W])
+	  return ROBOTS_KEY_W;
+	if (valid[TO_NW])
+	  return ROBOTS_KEY_NW;
+	if (valid[TO_SW])
+	  return ROBOTS_KEY_SW;
+      }
     }
-    else if (selfrow > avgrow1)
+    else if (selfcol > maxcol) // rightofit
     {
-      if (valid[TO_NW])
-	return ROBOTS_KEY_NE;
-      if (valid[TO_N])
-	return ROBOTS_KEY_N;
-      if (valid[TO_W])
-	return ROBOTS_KEY_E;
+      if (selfrow < avgrow0)
+      {
+	if (valid[TO_SW])
+	  return ROBOTS_KEY_SW;
+	if (valid[TO_S])
+	  return ROBOTS_KEY_S;
+	if (valid[TO_W])
+	  return ROBOTS_KEY_W;
+      }
+      else if (selfrow > avgrow1)
+      {
+	if (valid[TO_NW])
+	  return ROBOTS_KEY_NW;
+	if (valid[TO_N])
+	  return ROBOTS_KEY_N;
+	if (valid[TO_W])
+	  return ROBOTS_KEY_W;
+      }
+      else // avgrow0 <= selfrow <= avgrow1
+      {
+	if (valid[TO_W])
+	  return ROBOTS_KEY_W;
+	if (valid[TO_NW])
+	  return ROBOTS_KEY_NW;
+	if (valid[TO_SW])
+	  return ROBOTS_KEY_SW;
+      }
     }
-    else // avgrow0 <= selfrow <= avgrow1
-    {
-      if (valid[TO_W])
-	return ROBOTS_KEY_E;
-      if (valid[TO_NW])
-	return ROBOTS_KEY_NE;
-      if (valid[TO_SW])
-	return ROBOTS_KEY_SE;
-    }
-  }
-  else if (selfcol > maxcol) // rightofit
-  {
-    if (selfrow < avgrow0)
-    {
-      if (valid[TO_SW])
-	return ROBOTS_KEY_SE;
-      if (valid[TO_S])
-	return ROBOTS_KEY_S;
-      if (valid[TO_W])
-	return ROBOTS_KEY_E;
-    }
-    else if (selfrow > avgrow1)
-    {
-      if (valid[TO_NW])
-	return ROBOTS_KEY_NE;
-      if (valid[TO_N])
-	return ROBOTS_KEY_N;
-      if (valid[TO_W])
-	return ROBOTS_KEY_E;
-    }
-    else // avgrow0 <= selfrow <= avgrow1
-    {
-      if (valid[TO_W])
-	return ROBOTS_KEY_E;
-      if (valid[TO_NW])
-	return ROBOTS_KEY_NE;
-      if (valid[TO_SW])
-	return ROBOTS_KEY_SE;
-    }
-  }
   return NIL;
 }
 
@@ -345,14 +345,14 @@ static int junkrow(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfcol < col - 1 && valid[TO_SE])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_SW;
+		    key = ROBOTS_KEY_SE;
 		  }
 		  else if (valid[TO_S])
 		  {
 		    num = selfnum;
 		    key = ROBOTS_KEY_S;
 		  }
-		}
+	      }
 	      }
 	      else if (selfrow > row)
 	      {
@@ -362,14 +362,14 @@ static int junkrow(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfcol < col - 1 && valid[TO_NE])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_NW;
+		    key = ROBOTS_KEY_NE;
 		  }
 		  else if (valid[TO_N])
 		  {
 		    num = selfnum;
 		    key = ROBOTS_KEY_N;
 		  }
-		}
+	      }
 	      }
 	      else // selfrow == row
 		return ROBOTS_KEY_WAIT;
@@ -385,7 +385,7 @@ static int junkrow(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfnumcol <= robnum && selfnumcol < num && valid[TO_W])
 		  {
 		    num = selfnumcol;
-		    key = ROBOTS_KEY_E;
+		    key = ROBOTS_KEY_W;
 		  }
 		}
 		else // selfnumcol <= selfnumrow
@@ -393,7 +393,7 @@ static int junkrow(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfnumrow <= robnum && selfnumrow < num && valid[TO_SW])
 		  {
 		    num = selfnumrow;
-		    key = ROBOTS_KEY_SE;
+		    key = ROBOTS_KEY_SW;
 		  }
 		}
 	      }
@@ -405,7 +405,7 @@ static int junkrow(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfnumcol <= robnum && selfnumcol < num && valid[TO_W])
 		  {
 		    num = selfnumcol;
-		    key = ROBOTS_KEY_E;
+		    key = ROBOTS_KEY_W;
 		  }
 		}
 		else // selfnumcol <= selfnumrow
@@ -413,7 +413,7 @@ static int junkrow(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfnumrow <= robnum && selfnumrow < num && valid[TO_NW])
 		  {
 		    num = selfnumrow;
-		    key = ROBOTS_KEY_NE;
+		    key = ROBOTS_KEY_NW;
 		  }
 		}
 	      }
@@ -425,12 +425,12 @@ static int junkrow(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (valid[TO_NW])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_NE;
+		    key = ROBOTS_KEY_NW;
 		  }
 		  else if (valid[TO_SW])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_SE;
+		    key = ROBOTS_KEY_SW;
 		  }
 		}
 	      } 
@@ -452,7 +452,7 @@ static int junkrow(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfcol > col + 1 && valid[TO_SW])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_SE;
+		    key = ROBOTS_KEY_SW;
 		  }
 		  else if (valid[TO_S])
 		  {
@@ -469,7 +469,7 @@ static int junkrow(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfcol > col + 1 && valid[TO_NW])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_NE;
+		    key = ROBOTS_KEY_NW;
 		  }
 		  else if (valid[TO_N])
 		  {
@@ -492,7 +492,7 @@ static int junkrow(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfnumcol <= robnum && selfnumcol < num && valid[TO_E])
 		  {
 		    num = selfnumcol;
-		    key = ROBOTS_KEY_W;
+		    key = ROBOTS_KEY_E;
 		  }
 		}
 		else // selfnumcol <= selfnumrow
@@ -500,7 +500,7 @@ static int junkrow(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfnumrow <= robnum && selfnumrow < num && valid[TO_SE])
 		  {
 		    num = selfnumrow;
-		    key = ROBOTS_KEY_SW;
+		    key = ROBOTS_KEY_SE;
 		  }
 		}
 	      }
@@ -512,7 +512,7 @@ static int junkrow(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfnumcol <= robnum && selfnumcol < num && valid[TO_E])
 		  {
 		    num = selfnumcol;
-		    key = ROBOTS_KEY_W;
+		    key = ROBOTS_KEY_E;
 		  }
 		}
 		else // selfnumcol <= selfnumrow
@@ -520,7 +520,7 @@ static int junkrow(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfnumrow <= robnum && selfnumrow < num && valid[TO_NE])
 		  {
 		    num = selfnumrow;
-		    key = ROBOTS_KEY_NW;
+		    key = ROBOTS_KEY_NE;
 		  }
 		}
 	      }
@@ -532,12 +532,12 @@ static int junkrow(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (valid[TO_NE])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_NW;
+		    key = ROBOTS_KEY_NE;
 		  }
 		  else if (valid[TO_SE])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_SW;
+		    key = ROBOTS_KEY_SE;
 		  }
 		}
 	      }
@@ -556,7 +556,7 @@ static int junkrow(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 //******************************************************************************
 // >>> junkcol
 
-static int junkcol(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid,
+static int junkcol(const char board[SCREEN_ROWS][SCREEN_COLS], const char* valid,
   int selfrow, int selfcol, int robrow, int robcol)
 {
   int num = SCREEN_COLS; 
@@ -581,12 +581,12 @@ static int junkcol(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfrow < row - 1 && valid[TO_SE])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_SW;
+		    key = ROBOTS_KEY_SE;
 		  }
 		  else if (valid[TO_E])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_W;
+		    key = ROBOTS_KEY_E;
 		  }
 		}
 	      }
@@ -598,12 +598,12 @@ static int junkcol(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfrow < row - 1 && valid[TO_W])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_SE;
+		    key = ROBOTS_KEY_SW;
 		  }
 		  else if (valid[TO_W])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_E;
+		    key = ROBOTS_KEY_W;
 		  }
 		}
 	      }
@@ -629,7 +629,7 @@ static int junkcol(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfnumcol <= robnum && selfnumcol < num && valid[TO_NE])
 		  {
 		    num = selfnumcol;
-		    key = ROBOTS_KEY_NW;
+		    key = ROBOTS_KEY_NE;
 		  }
 		}
 	      }
@@ -649,7 +649,7 @@ static int junkcol(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfnumcol <= robnum && selfnumcol < num && valid[TO_NW])
 		  {
 		    num = selfnumcol;
-		    key = ROBOTS_KEY_NE;
+		    key = ROBOTS_KEY_NW;
 		  }
 		}
 	      }
@@ -661,12 +661,12 @@ static int junkcol(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (valid[TO_NW])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_NE;
+		    key = ROBOTS_KEY_NW;
 		  }
 		  else if (valid[TO_NE])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_NW;
+		    key = ROBOTS_KEY_NE;
 		  }
 		}
 	      } 
@@ -688,12 +688,12 @@ static int junkcol(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfrow > row + 1 && valid[TO_NE])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_NW;
+		    key = ROBOTS_KEY_NE;
 		  }
 		  else if (valid[TO_E])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_W;
+		    key = ROBOTS_KEY_E;
 		  }
 		}
 	      }
@@ -705,12 +705,12 @@ static int junkcol(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfrow > row + 1 && valid[TO_NW])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_NE;
+		    key = ROBOTS_KEY_NW;
 		  }
 		  else if (valid[TO_W])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_E;
+		    key = ROBOTS_KEY_W;
 		  }
 		}
 	      }
@@ -736,7 +736,7 @@ static int junkcol(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfnumcol <= robnum && selfnumcol < num && valid[TO_SE])
 		  {
 		    num = selfnumcol;
-		    key = ROBOTS_KEY_SW;
+		    key = ROBOTS_KEY_SE;
 		  }
 		}
 	      }
@@ -756,7 +756,7 @@ static int junkcol(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (selfnumcol <= robnum && selfnumcol < num && valid[TO_SW])
 		  {
 		    num = selfnumcol;
-		    key = ROBOTS_KEY_SE;
+		    key = ROBOTS_KEY_SW;
 		  }
 		}
 	      }
@@ -768,12 +768,12 @@ static int junkcol(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 		  if (valid[TO_NE])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_SW;
+		    key = ROBOTS_KEY_SE;
 		  }
 		  else if (valid[TO_SE])
 		  {
 		    num = selfnum;
-		    key = ROBOTS_KEY_SE;
+		    key = ROBOTS_KEY_SW;
 		  }
 		}
 	      }
@@ -814,25 +814,25 @@ static int junkesc(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
     if (selfrow < junkrow)
     {
       if (valid[TO_SW])
-	key = ROBOTS_KEY_SE;
+	key = ROBOTS_KEY_SW;
       else if (valid[TO_W])
-	key = ROBOTS_KEY_E;
+	key = ROBOTS_KEY_W;
     }
     else if (selfrow > junkrow)
     {
       if (valid[TO_NW])
-	key = ROBOTS_KEY_NE;
+	key = ROBOTS_KEY_NW;
       else if (valid[TO_W])
-	key = ROBOTS_KEY_E;
+	key = ROBOTS_KEY_W;
     }
     else // selfrow == junkrow
     {
       if (valid[TO_W])
-	key = ROBOTS_KEY_E;
+	key = ROBOTS_KEY_W;
       else if (valid[TO_NW])
-	key = ROBOTS_KEY_NE;
+	key = ROBOTS_KEY_NW;
       else if (valid[TO_SW])
-	key = ROBOTS_KEY_SE;
+	key = ROBOTS_KEY_SW;
     }
   }
   else if (selfcol > robcol)
@@ -840,27 +840,27 @@ static int junkesc(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
     if (selfrow < junkrow)
     {
       if (valid[TO_SE])
-	key = ROBOTS_KEY_SW;
+	key = ROBOTS_KEY_SE;
       else if (valid[TO_E])
-	key = ROBOTS_KEY_W;
+	key = ROBOTS_KEY_E;
     }
     else if (selfrow > junkrow)
     {
       if (valid[TO_NE])
-	key = ROBOTS_KEY_NW;
+	key = ROBOTS_KEY_NE;
       else if (valid[TO_E])
-	key = ROBOTS_KEY_W;
+	key = ROBOTS_KEY_E;
     }
     else // selfrow == junkrow
     {
       if (valid[TO_E])
-	key = ROBOTS_KEY_W;
+	key = ROBOTS_KEY_E;
       else if (valid[TO_NE])
-	key = ROBOTS_KEY_NW;
+	key = ROBOTS_KEY_NE;
       else if (valid[TO_SE])
-	key = ROBOTS_KEY_SW;
+	key = ROBOTS_KEY_SE;
     }
-  } 
+  }
   return key;
 }
 
@@ -868,64 +868,64 @@ static int junkesc(const char board[SCREEN_ROWS][SCREEN_COLS], const char *valid
 //******************************************************************************
 // >>> inbetween
 
-static char inbetween(const char *valid, int selfrow, int avgrow0, int avgrow1,
+static int inbetween(const char *valid, int selfrow, int avgrow0, int avgrow1,
   int selfcol, int avgcol0, int avgcol1, int minrow, int maxrow, int mincol, int maxcol)
 {
   if (selfcol < avgcol0)
     if (selfrow < avgrow0)
     {
       if (valid[TO_SE])
-	return ROBOTS_KEY_SW;
+	return ROBOTS_KEY_SE;
       if (valid[TO_E])
-	return ROBOTS_KEY_W;
+	return ROBOTS_KEY_E;
       if (valid[TO_S])
 	return ROBOTS_KEY_S;
     }
     else if (selfrow > avgrow1)
     {
       if (valid[TO_NE])
-	return ROBOTS_KEY_NW;
+	return ROBOTS_KEY_NE;
       if (valid[TO_E])
-	return ROBOTS_KEY_W;
+	return ROBOTS_KEY_E;
       if (valid[TO_N])
 	return ROBOTS_KEY_N;
     }
     else // avgrow0 <= selfrow <= avgrow1
     {
       if (valid[TO_E])
-	return ROBOTS_KEY_W;
+	return ROBOTS_KEY_E;
       if (valid[TO_NE])
-	return ROBOTS_KEY_NW;
+	return ROBOTS_KEY_NE;
       if (valid[TO_SE])
-	return ROBOTS_KEY_SW;
+	return ROBOTS_KEY_SE;
     }
   else if (selfcol > avgcol1)
     if (selfrow < avgrow0)
     {
       if (valid[TO_SW])
-	return ROBOTS_KEY_SE;
+	return ROBOTS_KEY_SW;
       if (valid[TO_W])
-	return ROBOTS_KEY_E;
+	return ROBOTS_KEY_W;
       if (valid[TO_S])
 	return ROBOTS_KEY_S;
     }
     else if (selfrow > avgrow1)
     {
       if (valid[TO_NW])
-	return ROBOTS_KEY_NE;
+	return ROBOTS_KEY_NW;
       if (valid[TO_W])
-	return ROBOTS_KEY_E;
+	return ROBOTS_KEY_W;
       if (valid[TO_N])
 	return ROBOTS_KEY_N;
     }
     else // avgrow0 <= selfrow <= avgrow1
     {
       if (valid[TO_W])
-	return ROBOTS_KEY_E;
+	return ROBOTS_KEY_W;
       if (valid[TO_NW])
-	return ROBOTS_KEY_NE;
+	return ROBOTS_KEY_NW;
       if (valid[TO_SW])
-	return ROBOTS_KEY_SE;
+	return ROBOTS_KEY_SW;
     }
   else // avgcol0 <= selfcol <= avgcol1
     if (selfrow < avgrow0)
@@ -933,37 +933,37 @@ static char inbetween(const char *valid, int selfrow, int avgrow0, int avgrow1,
       if (valid[TO_S])
 	return ROBOTS_KEY_S;
       if (valid[TO_SW])
-	return ROBOTS_KEY_SE;
-      if (valid[TO_SE])
 	return ROBOTS_KEY_SW;
+      if (valid[TO_SE])
+	return ROBOTS_KEY_SE;
     }
     else if (selfrow > avgrow1)
     {
       if (valid[TO_N])
 	return ROBOTS_KEY_N;
       if (valid[TO_NW])
-	return ROBOTS_KEY_NE;
-      if (valid[TO_NE])
 	return ROBOTS_KEY_NW;
+      if (valid[TO_NE])
+	return ROBOTS_KEY_NE;
     }
 
   if (selfcol <= avgcol1)
   {
     if (valid[TO_E])
-      return ROBOTS_KEY_W;
+      return ROBOTS_KEY_E;
     if (valid[TO_NE])
-      return ROBOTS_KEY_NW;
+      return ROBOTS_KEY_NE;
     if (valid[TO_SE])
-      return ROBOTS_KEY_SW;
+      return ROBOTS_KEY_SE;
   }
   else if (selfcol >= avgcol0)
   {
     if (valid[TO_W])
-      return ROBOTS_KEY_E;
+      return ROBOTS_KEY_W;
     if (valid[TO_NW])
-      return ROBOTS_KEY_NE;
+      return ROBOTS_KEY_NW;
     if (valid[TO_SW])
-      return ROBOTS_KEY_SE;
+      return ROBOTS_KEY_SW;
   }
 
   if (selfrow <= avgrow1)
@@ -971,37 +971,37 @@ static char inbetween(const char *valid, int selfrow, int avgrow0, int avgrow1,
     if (valid[TO_S])
       return ROBOTS_KEY_S;
     if (valid[TO_SW])
-      return ROBOTS_KEY_SE;
-    if (valid[TO_SE])
       return ROBOTS_KEY_SW;
+    if (valid[TO_SE])
+      return ROBOTS_KEY_SE;
   }
   else if (selfrow >= avgrow0)
   {
     if (valid[TO_N])
       return ROBOTS_KEY_N;
     if (valid[TO_NW])
-      return ROBOTS_KEY_NE;
-    if (valid[TO_NE])
       return ROBOTS_KEY_NW;
+    if (valid[TO_NE])
+      return ROBOTS_KEY_NE;
   }
 
   if (selfcol <= maxcol)
   {
     if (valid[TO_E])
-      return ROBOTS_KEY_W;
+      return ROBOTS_KEY_E;
     if (valid[TO_NE])
-      return ROBOTS_KEY_NW;
+      return ROBOTS_KEY_NE;
     if (valid[TO_SE])
-      return ROBOTS_KEY_SW;
+      return ROBOTS_KEY_SE;
   }
   else if (selfcol >= mincol)
   {
     if (valid[TO_W])
-      return ROBOTS_KEY_E;
+      return ROBOTS_KEY_W;
     if (valid[TO_NW])
-      return ROBOTS_KEY_NE;
+      return ROBOTS_KEY_NW;
     if (valid[TO_SW])
-      return ROBOTS_KEY_SE;
+      return ROBOTS_KEY_SW;
   }
 
   if (selfrow <= maxrow)
@@ -1009,18 +1009,18 @@ static char inbetween(const char *valid, int selfrow, int avgrow0, int avgrow1,
     if (valid[TO_S])
       return ROBOTS_KEY_S;
     if (valid[TO_SW])
-      return ROBOTS_KEY_SE;
-    if (valid[TO_SE])
       return ROBOTS_KEY_SW;
+    if (valid[TO_SE])
+      return ROBOTS_KEY_SE;
   }
   else if (selfrow >= minrow)
   {
     if (valid[TO_N])
       return ROBOTS_KEY_N;
     if (valid[TO_NW])
-      return ROBOTS_KEY_NE;
-    if (valid[TO_NE])
       return ROBOTS_KEY_NW;
+    if (valid[TO_NE])
+      return ROBOTS_KEY_NE;
   }
 
   return NIL;
@@ -1100,17 +1100,17 @@ int robots_strategy_auto(const char board[SCREEN_ROWS][SCREEN_COLS])
     if (selfcol > mincol && selfcol < maxcol)
     {
       if (valid[TO_W])
-	return ROBOTS_KEY_E;
-      if (valid[TO_E])
 	return ROBOTS_KEY_W;
+      if (valid[TO_E])
+	return ROBOTS_KEY_E;
       if (valid[TO_NW])
-	return ROBOTS_KEY_NE;
-      if (valid[TO_SW])
-	return ROBOTS_KEY_SE;
-      if (valid[TO_NE])
 	return ROBOTS_KEY_NW;
-      if (valid[TO_SE])
+      if (valid[TO_SW])
 	return ROBOTS_KEY_SW;
+      if (valid[TO_NE])
+	return ROBOTS_KEY_NE;
+      if (valid[TO_SE])
+	return ROBOTS_KEY_SE;
     }
   }
   else if (minrow < maxrow && mincol == maxcol) // one column of robots
@@ -1134,18 +1134,18 @@ int robots_strategy_auto(const char board[SCREEN_ROWS][SCREEN_COLS])
 
     if (selfrow > minrow && selfrow < maxrow)
     {
-      if (valid[TO_N])
+    if (valid[TO_N])
 	return ROBOTS_KEY_N;
       if (valid[TO_S])
 	return ROBOTS_KEY_S;
       if (valid[TO_NW])
-	return ROBOTS_KEY_NE;
-      if (valid[TO_NE])
 	return ROBOTS_KEY_NW;
+      if (valid[TO_NE])
+	return ROBOTS_KEY_NE;
       if (valid[TO_SW])
-	return ROBOTS_KEY_SE;
-      if (valid[TO_SE])
 	return ROBOTS_KEY_SW;
+      if (valid[TO_SE])
+	return ROBOTS_KEY_SE;
     }
   }
   else // spread out
