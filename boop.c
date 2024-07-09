@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <assert.h>
 
 #define BOARD_SIZE 6
 #define SYMBOL_TILES_HORIZ 4
@@ -169,7 +170,7 @@ static void board_frame()
       {
 	display_set(x + x0, 0 + y0, true);
 	display_set(x + x0, CELL_HEIGHT - 1 + y0, true);
-      }board_symbol_bits
+      }
 
       for (int y = 0; y < CELL_WIDTH; y++)
       {
@@ -194,6 +195,7 @@ static void board_symbol(int row, int col, int symbol)
 // <<<
 //******************************************************************************
 
+#if 0
 static const int player_symbol_bits[6][8] =
 {
   { // 0
@@ -260,23 +262,37 @@ static const int player_symbol_bits[6][8] =
 
 static void player_frame()
 {
-  
+
 }
 
 static void player_symbol(int player, int row, int symbol)
 {
-  
+  player = player;
+  row = row;
+  symbol = symbol; 
 }
+#endif
 
 //******************************************************************************
 
 int main(int ac, const char *av[])
 {
-  int display_select
-      = ac == 1 ? DISPLAY_SELECT_GX | DISPLAY_SELECT_SP
-      : av[1][0] == 'g' ? DISPLAY_SELECT_GX
-      : av[1][0] == 's' ? DISPLAY_SELECT_SP
-      : 0;
+  int display_select = 0;
+  for (int ai = 1; ai < ac; ai++)
+  {
+    assert(av[ai][0] == '-');
+    switch (av[ai][1])
+    {
+    case 'x':
+      display_select |= DISPLAY_SELECT_GX;
+      break;
+    case 's':
+      display_select |= DISPLAY_SELECT_SP;
+      break;
+    default:
+      assert(0);
+    }
+  }
   display_create(display_select);
 
   board_frame();

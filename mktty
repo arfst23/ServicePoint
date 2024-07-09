@@ -75,7 +75,7 @@ sub bar()
 {
   foreach my $t (0 .. 39)
   {
-    my $str = ' ' . '=' x $t . '>' . ' ' x (39 - $t) . '| ' . int(100 * $t / 38) . "%\r";
+    my $str = ' ' . '=' x $t . '>' . ' ' x (39 - $t) . '| ' . int(100 * $t / 40) . "%\r";
     out $str;
     del $del_bar;
   }

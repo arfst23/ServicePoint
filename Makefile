@@ -1,10 +1,10 @@
-################################################################################
+##############################################################################
  
 CC		= gcc
 CPPFLAGS	=
 CFLAGS		= -march=native -O3 -funroll-loops -fpic -fstack-protector-all \
 		  -Wall -Wextra -Werror -Wno-deprecated-declarations #-Og -g
-LDFLAGS		= -L. -lsp -llzma -lX11
+LDFLAGS		= -L. -lsp -llzma -lX11 -lm
 REASON		= @if [ -f $@ ]; then echo "[$@: $?]"; else echo "[$@]"; fi
 
 .PHONY: tags depend clean distclean
@@ -20,7 +20,7 @@ REASON		= @if [ -f $@ ]; then echo "[$@: $?]"; else echo "[$@]"; fi
 
 ################################################################################
 
-all: spres spclr tty2sp pbm2sp pbms2sp robots
+all: spres spclr tty2sp pbm2sp pbms2sp robots bubbles
 
 pbm: test.pbm frame-01.pbm frame-02.pbm frame-03.pbm frame-04.pbm frame-05.pbm \
 	frame-06.pbm frame-07.pbm frame-08.pbm frame-09.pbm frame-10.pbm \
@@ -47,11 +47,21 @@ pbms2sp: pbms2sp.o display.o display_graphix.o graphix.o servicepoint.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
+robots: robots.o robots_auto.o robots_bsd.o term.o port.o display_text.o display.o display_graphix.o graphix.o servicepoint.o
+	$(REASON)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
+
+################################################################################
+
 boop: boop.o display.o display_graphix.o graphix.o servicepoint.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
-robots: robots.o robots_auto.o robots_bsd.o term.o port.o display_text.o display.o display_graphix.o graphix.o servicepoint.o
+corewar: corewar.o display_text.o display.o display_graphix.o graphix.o servicepoint.o
+	$(REASON)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
+
+bubbles: bubbles.o display.o display_graphix.o graphix.o servicepoint.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
@@ -118,7 +128,7 @@ clean:
 
 distclean: clean
 	$(REASON)
-	$(RM) core deps tags spres spclr tty2sp pbm2sp pbms2sp robots
+	$(RM) core deps tags spres spclr tty2sp pbm2sp pbms2sp robots bubbles
 
 -include deps
 
