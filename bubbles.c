@@ -17,9 +17,10 @@
 #define HEIGHT 236
 #define BORDER 50
 #define MAX_DIST 574
-#define EMPTY 15
+#define EMPTY 25
 #define QUEUE_LEN 100000
 #define FRAMES_PER_BUBBLE 20
+#define MAX_SAME 3
 
 //******************************************************************************
 
@@ -94,12 +95,10 @@ static void set(int x, int y, bool value)
   assert(x < WIDTH + 2 * BORDER);
   assert(y >= 0);
   assert(y < HEIGHT + 2 * BORDER);
-
   screen[x][y] = value;
 
   x -= BORDER;
   y -= BORDER;
-
   if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
     display_set_virt(x, y, value);
 }
@@ -273,8 +272,24 @@ int main(int ac, char *av[])
 	bubble_create(x, y, !screen[x][y]);
       else
       {
-	x = rand() % (WIDTH + 2 * BORDER - 1) + 1;
-        y = rand() % (HEIGHT + 2 * BORDER - 1) + 1;
+	int x = rand() % (WIDTH + 2 * BORDER - 1) + 1;
+	int y = rand() % (HEIGHT + 2 * BORDER - 1) + 1;
+	if (same(x, y))
+	  bubble_create(x, y, !screen[x][y]);
+	else
+	{
+	  int x = rand() % (WIDTH + 2 * BORDER - 1) + 1;
+	  int y = rand() % (HEIGHT + 2 * BORDER - 1) + 1;
+	  if (same(x, y))
+	    bubble_create(x, y, !screen[x][y]);
+	  else
+	  {
+	    int x = rand() % (WIDTH + 2 * BORDER - 1) + 1;
+	    int y = rand() % (HEIGHT + 2 * BORDER - 1) + 1;
+	    if (same(x, y))
+	      bubble_create(x, y, !screen[x][y]);
+	  }
+	}
       }
     }
     queue_run();
