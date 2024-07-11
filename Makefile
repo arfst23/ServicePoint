@@ -22,7 +22,7 @@ REASON		= @if [ -f $@ ]; then echo "[$@: $?]"; else echo "[$@]"; fi
 
 all: spres spclr tty2sp pbm2sp pbms2sp robots bubbles
 
-pbm: test.pbm frame-01.pbm frame-02.pbm frame-03.pbm frame-04.pbm frame-05.pbm \
+pbm: frame-01.pbm frame-02.pbm frame-03.pbm frame-04.pbm frame-05.pbm \
 	frame-06.pbm frame-07.pbm frame-08.pbm frame-09.pbm frame-10.pbm \
 	frame-11.pbm frame-12.pbm frame-13.pbm frame-14.pbm frame-15.pbm \
 	frame-16.pbm frame-17.pbm frame-18.pbm frame-19.pbm
@@ -54,10 +54,6 @@ robots: robots.o robots_auto.o robots_bsd.o term.o port.o display_text.o display
 ################################################################################
 
 boop: boop.o display.o display_graphix.o graphix.o servicepoint.o
-	$(REASON)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
-
-corewar: corewar.o display_text.o display.o display_graphix.o graphix.o servicepoint.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 

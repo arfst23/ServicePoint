@@ -9,18 +9,21 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <math.h>
+#include <ctype.h>
 #include <string.h>
 #include <time.h>
 #include <assert.h>
 
 #define WIDTH 448
 #define HEIGHT 236
-#define BORDER 50
+#define BORDER 30
 #define MAX_DIST 574
 #define EMPTY 25
 #define QUEUE_LEN 100000
 #define FRAMES_PER_BUBBLE 20
 #define MAX_SAME 3
+#define DELAY 25
+#define MIN_DELAY 20
 
 //******************************************************************************
 
@@ -247,12 +250,18 @@ static void filter()
 int main(int ac, char *av[])
 {
   int display_select = 0;
+  int delay = DELAY;
   for (int ai = 1; ai < ac; ai++)
   {
     if (av[ai][1] == 's')
       display_select |= DISPLAY_SELECT_SP;
     else if (av[ai][1] == 'x')
       display_select |= DISPLAY_SELECT_GX;
+    else if (isdigit(av[ai][1]))
+    {
+      delay = atoi(&av[ai][1]);
+      assert(delay >= MIN_DELAY);
+    }
     else
       assert(0);
   }
@@ -296,7 +305,7 @@ int main(int ac, char *av[])
     filter();
     display_flush();
 
-    usleep(24 * 1000);
+    usleep(delay * 1000);
   }
   display_free();
   return EXIT_SUCCESS;

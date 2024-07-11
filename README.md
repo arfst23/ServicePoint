@@ -66,6 +66,20 @@ This is a 56x20 charaters BSD games robots clone.
     robots -t -x -a -d
     robots -l -b
 
+## Bubbles
+
+Displays a pattern of expanding bubbles
+
+### Options
+
+  - `-x`: use service point display emulator
+  - `-s`: send to service point display
+  - `-23`: frame delay (default 
+
+### Examples
+
+    bubbles -x -s
+
 ## Boop
 
 Implements the board game Boop
