@@ -21,6 +21,7 @@
 #define EMPTY 25
 #define QUEUE_LEN 100000
 #define FRAMES_PER_BUBBLE 20
+#define FRAMES_PER_RING 10
 #define MAX_SAME 3
 #define DELAY 25
 #define MIN_DELAY 20
@@ -247,30 +248,8 @@ static void filter()
 
 //******************************************************************************
 
-int main(int ac, char *av[])
+static void animation_bubbles(int delay)
 {
-  int display_select = 0;
-  int delay = DELAY;
-  for (int ai = 1; ai < ac; ai++)
-  {
-    if (av[ai][1] == 's')
-      display_select |= DISPLAY_SELECT_SP;
-    else if (av[ai][1] == 'x')
-      display_select |= DISPLAY_SELECT_GX;
-    else if (isdigit(av[ai][1]))
-    {
-      delay = atoi(&av[ai][1]);
-      assert(delay >= MIN_DELAY);
-    }
-    else
-      assert(0);
-  }
-
-  srand(time(NULL));
-  init();
-  memset(screen, 0, (WIDTH + 2 * BORDER) * (HEIGHT + 2 * BORDER) * sizeof(int8_t));
-  display_create(display_select);
-
   for (int n = 0; display_button() == 0; n++)
   {
     if (!(n % FRAMES_PER_BUBBLE))
@@ -304,9 +283,93 @@ int main(int ac, char *av[])
     queue_run();
     filter();
     display_flush();
-
     usleep(delay * 1000);
   }
+}
+
+static void animation_rings(int delay)
+{
+  int x = -1;
+  int y = -1;
+  for (int n = 0; display_button() == 0; n++)
+  {
+    if (n % FRAMES_PER_BUBBLE == 0)
+    {
+      x = rand() % (WIDTH + 2 * BORDER - 1) + 1;
+      y = rand() % (HEIGHT + 2 * BORDER - 1) + 1;
+      if (!screen[x][y] && same(x, y))
+	bubble_create(x, y, true);
+      else
+      {
+	x = rand() % (WIDTH + 2 * BORDER - 1) + 1;
+	y = rand() % (HEIGHT + 2 * BORDER - 1) + 1;
+	if (!screen[x][y] && same(x, y))
+	  bubble_create(x, y, true);
+	else
+	{
+	  x = rand() % (WIDTH + 2 * BORDER - 1) + 1;
+	  y = rand() % (HEIGHT + 2 * BORDER - 1) + 1;
+	  if (!screen[x][y] && same(x, y))
+	    bubble_create(x, y, true);
+	  else
+	  {
+	    x = rand() % (WIDTH + 2 * BORDER - 1) + 1;
+	    y = rand() % (HEIGHT + 2 * BORDER - 1) + 1;
+	    if (!screen[x][y] && same(x, y))
+	      bubble_create(x, y, true);
+	    else
+	    {
+	      x = -1;
+	      y = -1;
+	    }
+	  }
+	}
+      }
+    }
+    else if (n % FRAMES_PER_BUBBLE == FRAMES_PER_RING)
+    {
+      if (x >= 0 && y >= 0 && screen[x][y])
+	bubble_create(x, y, false);
+    }
+    queue_run();
+    filter();
+    display_flush();
+    usleep(delay * 1000);
+  }
+}
+
+int main(int ac, char *av[])
+{
+  bool rings = false;
+  int display_select = 0;
+  int delay = DELAY;
+  for (int ai = 1; ai < ac; ai++)
+  {
+    if (av[ai][1] == 's')
+      display_select |= DISPLAY_SELECT_SP;
+    else if (av[ai][1] == 'x')
+      display_select |= DISPLAY_SELECT_GX;
+    else if (av[ai][1] == 'r')
+      rings = true;
+    else if (isdigit(av[ai][1]))
+    {
+      delay = atoi(&av[ai][1]);
+      assert(delay >= MIN_DELAY);
+    }
+    else
+      assert(0);
+  }
+
+  srand(time(NULL));
+  init();
+  memset(screen, 0, (WIDTH + 2 * BORDER) * (HEIGHT + 2 * BORDER) * sizeof(int8_t));
+  display_create(display_select);
+
+  if (rings)
+    animation_rings(delay);
+  else
+    animation_bubbles(delay);
+
   display_free();
   return EXIT_SUCCESS;
 }

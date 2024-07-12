@@ -51,6 +51,10 @@ robots: robots.o robots_auto.o robots_bsd.o term.o port.o display_text.o display
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
+tun: tun.o display.o display_graphix.o graphix.o servicepoint.o
+	$(REASON)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
+
 ################################################################################
 
 boop: boop.o display.o display_graphix.o graphix.o servicepoint.o

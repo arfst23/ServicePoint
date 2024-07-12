@@ -74,7 +74,8 @@ Displays a pattern of expanding bubbles
 
   - `-x`: use service point display emulator
   - `-s`: send to service point display
-  - `-23`: frame delay (default 
+  - `-r`: dirplay rings instead of circles
+  - `-23`: frame delay in ms (default 25)
 
 ### Examples
 
