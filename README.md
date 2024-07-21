@@ -81,8 +81,19 @@ Displays a pattern of expanding bubbles
 
     bubbles -x -s
 
-## Boop
+## Disks
 
-Implements the board game Boop
+Displays disks rolling in the rows of the display.  Disks can have 2 different
+velocities and colors.  Disks reflect at the left/right border and when hitting
+a disk of the same color.  Running into a disk of mismatching color makes both
+disks drop to new rows depending on their velocity.
 
-TODO
+### Options
+
+  - `-x`: use service point display emulator
+  - `-s`: send to service point display
+  - `-23`: frame delay in ms (default 35)
+
+### Examples
+
+    disks -x -s
