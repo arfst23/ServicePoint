@@ -25,7 +25,7 @@ The access to the Service Point display is done via https://github.com/cccb/serv
   - `graphix.h`, `graphicx.c`: simple X11 window api
   - `display_graphix.h`, `display_graphix.c`: service point display emulation
   - `display.h`, `display.c`: common api for service point display library and emulator
-  - `display_text.h`, `display_text.c': client side text rendering on display
+  - `display_text.h`, `display_text.c`: client side text rendering on display
 
 ### Examples
 
