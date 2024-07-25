@@ -17,7 +17,7 @@
 #define ROTATION 12 // ~4 * pi
 #define SIZE DISPLAY_TILE_SIZE // 8
 #define ROW_DIST (DISPLAY_TILE_SIZE + DISPLAY_SEPARATOR_WIDTH)
-#define Y_START (-ROW_DIST)
+#define ROWS DISPLAY_TILES_VERT
 
 #define DELAY 35
 #define MIN_DELAY 20
@@ -282,7 +282,6 @@ void disk(int x, int y, int z, bool c)
 {
   assert(x > -SIZE);
   assert(x < WIDTH + SIZE);
-  assert(y >= -ROW_DIST);
   assert(y < HEIGHT + SIZE);
   assert(z >= 0);
   assert(z < ROTATION);
@@ -312,31 +311,34 @@ typedef struct
 } job_t;
 
 static job_t jobs[JOBS];
+static int _balance[2 + ROWS];
+static int *balance = _balance + 2;
 
 // <<<
 //******************************************************************************
 // >>> empty add
 
-static bool is_empty(bool side)
+static bool is_empty(bool side, int row)
 {
+  int y = ROW_DIST * row;
   for (int j = 0; j < JOBS; j++)
     if (jobs[j].valid)
     {
       if (side) // left
       {
-	if (jobs[j].y == 0 && jobs[j].x < 4 * SIZE)
+	if (jobs[j].y == y && jobs[j].x < 4 * SIZE)
 	  return false;
       }
       else // right
       {
-	if (jobs[j].y == 0 && jobs[j].x >= WIDTH - 4 * SIZE)
+	if (jobs[j].y == y && jobs[j].x >= WIDTH - 4 * SIZE)
 	  return false;
       }
     }
   return true;
 }
 
-static void add_job(bool side, bool fast, bool color)
+static void add_job(bool side, int row, bool fast, bool color)
 {
   int j;
   for (j = 0; j < JOBS; j++)
@@ -354,11 +356,13 @@ static void add_job(bool side, bool fast, bool color)
     jobs[j].x = WIDTH + SIZE;
     jobs[j].dx = fast ? -2 : -1;
   }
-  jobs[j].y = Y_START;
+  jobs[j].y = ROW_DIST * row;
   jobs[j].z = 0;
   jobs[j].t = 0;
   jobs[j].color = color;
   jobs[j].valid = true;
+
+  balance[row] += color ? 1 : -1;
 }
 
 // <<<
@@ -394,8 +398,11 @@ static bool fits_job(int j)
 
 static void run_job(int j)
 {
+  // move
   jobs[j].x += jobs[j].dx;
   jobs[j].z += jobs[j].dx;
+
+  // reflect
   if ((jobs[j].dx > 0 && jobs[j].x >= WIDTH)
     || (jobs[j].dx < 0 && jobs[j].x < 0))
   {
@@ -408,6 +415,7 @@ static void run_job(int j)
   if (jobs[j].z >= ROTATION)
     jobs[j].z -= ROTATION;
 
+  // fall
   if (jobs[j].t)
   {
     jobs[j].y += abs(jobs[j].dx);
@@ -419,6 +427,11 @@ static void run_job(int j)
     jobs[j].t--;
     if (jobs[j].t == 0 && !fits_job(j))
       jobs[j].t = ROW_DIST;
+    if (!jobs[j].t)
+    {
+      int row = jobs[j].y / ROW_DIST;
+      balance[row] += jobs[j].color ? 1 : -1;
+    }
   }
 
   int i = collide_job(j);
@@ -428,6 +441,7 @@ static void run_job(int j)
     {
       if (abs(jobs[j].x + jobs[j].dx - jobs[i].x - jobs[i].dx) < abs(jobs[j].x - jobs[i].x))
       {
+	// exchange impuls
 	int dx = jobs[j].dx;
 	jobs[j].dx = jobs[i].dx;
 	jobs[i].dx = dx;
@@ -435,6 +449,7 @@ static void run_job(int j)
     }
     else
     {
+      // start falling
       jobs[i].t = ROW_DIST;
       jobs[j].t = ROW_DIST;
     }
@@ -467,15 +482,6 @@ static void display_jobs()
 // <<<
 //******************************************************************************
 
-static int count()
-{
-  int c = 0;
-  for (int j = 0; j < JOBS; j++)
-    if (jobs[j].valid && jobs[j].y == Y_START)
-      c += jobs[j].color ? 1 : -1;
-  return c;
-}
-
 int main(int ac, char *av[])
 {
   int display_select = 0;
@@ -500,21 +506,23 @@ int main(int ac, char *av[])
 
   for (int t = 0; !display_button(); t--)
   {
-    if (!t)
+    if (!t) // falling
     {
-      int c = count();
+      int row = rand() & 1 ? -1 : -2;
+      int b = balance[row];
       bool side = rand() & 1;
-      bool color = c > 3 ? false : c < -3 ? true : rand() & 1; // equal dist first row
+      bool color = b > 3 ? false : b < -3 ? true : rand() & 1; // equal dist first row
       bool fast = rand() % 4 == 0;
       
-      if (is_empty(side))
+      // insert new coins above display
+      if (is_empty(side, row))
       {
-	add_job(side, fast, color);
+	add_job(side, row, fast, color);
 	t = MIN_NEW + rand() % (MAX_NEW - MIN_NEW);
       }
-      else if (is_empty(!side))
+      else if (is_empty(!side, row))
       {
-	add_job(!side, fast, color);
+	add_job(!side, row, fast, color);
 	t = MIN_NEW + rand() % (MAX_NEW - MIN_NEW);
       }
       else
@@ -522,6 +530,17 @@ int main(int ac, char *av[])
 	t = MIN_NEW;
       }
     }
+
+    // if inbalance is too large secretly insert a disk
+    for (int row = 0; row < ROWS; row++)
+      if (balance[row] > 2 || balance[row] < -2)
+      {
+	bool color = balance[row] < 0;
+	if (is_empty(color, row))
+	  add_job(color, row, false, color);
+	else if (is_empty(!color, row))
+	  add_job(!color, row, false, color);
+      }
 
     run_jobs();
 
