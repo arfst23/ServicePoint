@@ -20,7 +20,7 @@ REASON		= @if [ -f $@ ]; then echo "[$@: $?]"; else echo "[$@]"; fi
 
 ################################################################################
 
-all: spres spclr tty2sp pbm2sp pbms2sp robots bubbles disks
+all: spres spclr tty2sp pbm2sp pbms2sp robots bubbles disks tunnel
 
 pbm: frame-01.pbm frame-02.pbm frame-03.pbm frame-04.pbm frame-05.pbm \
 	frame-06.pbm frame-07.pbm frame-08.pbm frame-09.pbm frame-10.pbm \
@@ -55,7 +55,7 @@ disks: disks.o display.o display_graphix.o graphix.o servicepoint.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
-tun: tun.o display.o display_graphix.o graphix.o servicepoint.o
+tunnel: tunnel.o display.o display_graphix.o graphix.o servicepoint.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
@@ -132,7 +132,7 @@ clean:
 
 distclean: clean
 	$(REASON)
-	$(RM) core deps tags spres spclr tty2sp pbm2sp pbms2sp robots bubbles disks
+	$(RM) core deps tags spres spclr tty2sp pbm2sp pbms2sp robots bubbles disks tunnel
 
 -include deps
 
