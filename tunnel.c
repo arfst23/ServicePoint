@@ -23,8 +23,14 @@
 #define FOCAL_LENGTH 500
 #define OFFSET_SCALE 324
 
+#define CURVATURE_STEP 3
 #define FRAMES 10
 #define DELAY 60
+
+#define DIRECTION_TIMEOUT 50
+#define MAX_TIMEOUR 80
+#define DIRECTIONS 9
+#define PROBABILITY 32
 
 //******************************************************************************
 // >>> ring(x, y, r, s, val)
@@ -84,6 +90,20 @@ static void ring(int x, int y, int r, int s, bool value)
 // <<<
 //******************************************************************************
 
+int direction_x[DIRECTIONS] =
+{
+  -100, 0, 100,
+  -100, 0, 100,
+  -100, 0, 100,
+};
+
+int direction_y[DIRECTIONS] =
+{
+  -70, -70, -70,
+    0,   0,   0,
+   70,  70,  70,
+};
+
 int main(int ac, char *av[])
 {
   int display_select = 0;
@@ -100,42 +120,82 @@ int main(int ac, char *av[])
   init();
   int d0 = TUNNEL_RADIUS * FOCAL_LENGTH / CENTER_RADIUS - FOCAL_LENGTH;
 
-  static int angle_x[PERIODS * FRAMES];
   static int offset_x[PERIODS * FRAMES];
-  static int angle_y[PERIODS * FRAMES];
   static int offset_y[PERIODS * FRAMES];
 
   display_create(display_select);
 
+  int direction_timeout = DIRECTION_TIMEOUT;
+  int direction = 7;
+  bool target_reached = true;
   for (int frame = 0; !display_button(); frame = (frame + 1) % FRAMES)
   {
-    if (!frame)
+    if (target_reached)
+      direction_timeout--;
+    if (direction_timeout == 0)
     {
-      // TODO
-      static int curvature_x[PERIODS * FRAMES];
-      for (int i = 0; i < PERIODS * FRAMES; i++)
-	curvature_x[i] = 100;
-
-      static int curvature_y[PERIODS * FRAMES];
-      for (int i = 0; i < PERIODS * FRAMES; i++)
-	curvature_y[i] = 50;
-
-
-      // integrate
-      angle_x[0] = 0;
-      for (int i = 1; i < PERIODS * FRAMES; i++)
-	angle_x[i] = angle_x[i - 1] + curvature_x[i - 1];
-      offset_x[0] = 0;
-      for (int i = 1; i < PERIODS * FRAMES; i++)
-	offset_x[i] = offset_x[i - 1] + angle_x[i - 1];
-
-      angle_y[0] = 0;
-      for (int i = 1; i < PERIODS * FRAMES; i++)
-	angle_y[i] = angle_y[i - 1] + curvature_y[i - 1];
-      offset_y[0] = 0;
-      for (int i = 1; i < PERIODS * FRAMES; i++)
-	offset_y[i] = offset_y[i - 1] + angle_y[i - 1];
+      int d = rand() % (DIRECTIONS + 3);
+      if (d < DIRECTIONS)
+	direction = d;
+      direction_timeout = rand() % DIRECTION_TIMEOUT;
     }
+
+    int target_x = direction_x[direction];
+    int target_y = direction_y[direction];
+
+    static int curvature_x[PERIODS * FRAMES];
+    memmove(curvature_x, curvature_x + 1, (PERIODS * FRAMES - 1) * sizeof(int));
+    static int curvature_y[PERIODS * FRAMES];
+    memmove(curvature_y, curvature_y + 1, (PERIODS * FRAMES - 1) * sizeof(int));
+
+    int x = curvature_x[PERIODS * FRAMES - 2];
+    if (x < target_x)
+    {
+      x += CURVATURE_STEP;
+      if (x > target_x)
+	x = target_x;
+    }
+    else if (x > target_x)
+    {
+      x -= CURVATURE_STEP;
+      if (x < target_x)
+	x = target_x;
+    }
+    curvature_x[PERIODS * FRAMES - 1] = x;
+
+    int y = curvature_y[PERIODS * FRAMES - 2];
+    if (y < target_y)
+    {
+      y += CURVATURE_STEP;
+      if (y > target_y)
+	y = target_y;
+    }
+    else if (y > target_y)
+    {
+      y -= CURVATURE_STEP;
+      if (y < target_y)
+	y = target_y;
+    }
+    curvature_y[PERIODS * FRAMES - 1] = y;
+
+    target_reached = x == target_x && y == target_y;
+
+    // integrate
+    static int angle_x[PERIODS * FRAMES];
+    angle_x[0] = 0;
+    for (int i = 1; i < PERIODS * FRAMES; i++)
+      angle_x[i] = angle_x[i - 1] + curvature_x[i - 1];
+    offset_x[0] = 0;
+    for (int i = 1; i < PERIODS * FRAMES; i++)
+      offset_x[i] = offset_x[i - 1] + angle_x[i - 1];
+
+    static int angle_y[PERIODS * FRAMES];
+    angle_y[0] = 0;
+    for (int i = 1; i < PERIODS * FRAMES; i++)
+      angle_y[i] = angle_y[i - 1] + curvature_y[i - 1];
+    offset_y[0] = 0;
+    for (int i = 1; i < PERIODS * FRAMES; i++)
+      offset_y[i] = offset_y[i - 1] + angle_y[i - 1];
 
     int offset_z = frame * COLOR_PERIOD / FRAMES;
 
