@@ -1,0 +1,40 @@
+#!/bin/sh -e
+
+make all pbm
+
+pbms2sp -r -x -s -20 frame-??.pbm
+spclr
+sleep 3
+
+robots -t -s -a -d -5
+spclr
+sleep 3
+
+bubbles -x -s -30
+spclr
+sleep 3
+
+mktty | tty2sp -x -s
+sleep 1
+spclr
+sleep 3
+
+disks -x -s -60
+spclr
+sleep 3
+
+robots -t -s -b -d -5
+spclr
+sleep 3
+
+tunnel -x -s -30
+spclr
+sleep 3
+
+# eyes -x -s -30
+# spclr
+# sleep 3
+
+echo 'https://github.com/arfst23/ServicePoint' | tty2sp -x -s
+sleep 10
+spclr

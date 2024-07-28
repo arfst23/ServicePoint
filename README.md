@@ -16,7 +16,7 @@ The access to the Service Point display is done via https://github.com/cccb/serv
   - `-r`: reverse
   - `-x`: use service point display emulator
   - `-s`: send to service point display
-  - `-23`: frame delay for pbms2sp
+  - `-23`: time in seconds to run
 
 ### Files
 
@@ -75,7 +75,7 @@ Displays a pattern of expanding bubbles
   - `-x`: use service point display emulator
   - `-s`: send to service point display
   - `-r`: dirplay rings instead of circles
-  - `-23`: frame delay in ms (default 25)
+  - `-23`: time in seconds to run
 
 ### Examples
 
@@ -92,8 +92,42 @@ disks drop to new rows depending on their velocity.
 
   - `-x`: use service point display emulator
   - `-s`: send to service point display
-  - `-23`: frame delay in ms (default 35)
+  - `-23`: time in seconds to run
 
 ### Examples
 
     disks -x -s
+
+## Tunnel
+
+Display a fly through a tunnel animation.
+
+### Options
+
+  - `-x`: use service point display emulator
+  - `-s`: send to service point display
+  - `-23`: time in seconds to run
+
+### Examples
+
+    tunnel -x -s
+
+## Eyes
+
+An animation of 2 eyes, blinking and looking into different directions
+
+### Options
+
+  - `-x`: use service point display emulator
+  - `-s`: send to service point display
+  - `-23`: time in seconds to run
+
+### Examples
+
+  eyes -s -30
+
+## Demo
+
+Show off all.
+
+    demo

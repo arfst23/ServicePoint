@@ -485,7 +485,7 @@ static void display_jobs()
 int main(int ac, char *av[])
 {
   int display_select = 0;
-  int delay = DELAY;
+  int timeout = 0;
   for (int ai = 1; ai < ac; ai++)
   {
     if (av[ai][1] == 's')
@@ -493,10 +493,7 @@ int main(int ac, char *av[])
     else if (av[ai][1] == 'x')
       display_select |= DISPLAY_SELECT_GX;
     else if (isdigit(av[ai][1]))
-    {
-      delay = atoi(&av[ai][1]);
-      assert(delay >= MIN_DELAY);
-    }
+      timeout = atoi(&av[ai][1]) * 28;
     else
       assert(0);
   }
@@ -506,6 +503,10 @@ int main(int ac, char *av[])
 
   for (int t = 0; !display_button(); t--)
   {
+    timeout--;
+    if (!timeout)
+      break;
+
     if (!t) // falling
     {
       int row = rand() & 1 ? -1 : -2;
@@ -547,7 +548,7 @@ int main(int ac, char *av[])
     display_clear();
     display_jobs();
     display_flush();
-    usleep(delay * 1000);
+    usleep(DELAY * 1000);
   }
 
   display_free();

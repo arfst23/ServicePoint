@@ -24,7 +24,7 @@ int main(int ac, const char *av[])
 {
   int display_select = 0;
   bit on_value = PBM_WHITE;
-  int delay = DELAY;
+  int time = 0;
 
   int ai;
   for (ai = 1; ai < ac; ai++)
@@ -38,10 +38,7 @@ int main(int ac, const char *av[])
     else if (av[ai][1] == 'x')
       display_select |= DISPLAY_SELECT_GX;
     else if (isdigit(av[ai][1]))
-    {
-      delay = atoi(&av[ai][1]);
-      assert(delay >= MIN_DELAY);
-    }
+      time = atoi(&av[ai][1]) * 13;
     else
       assert(0);
   }
@@ -49,6 +46,7 @@ int main(int ac, const char *av[])
   int frames = ac - ai;
   char bits[frames][DISPLAY_HEIGHT][DISPLAY_WIDTH];
   memset(bits, 0, frames * DISPLAY_HEIGHT * DISPLAY_WIDTH * sizeof(char));
+  int delay = DELAY;
 
   for (int frame = 0; frame < frames; frame++)
   {
@@ -85,6 +83,10 @@ int main(int ac, const char *av[])
   
   for (int frame = 0; ; frame = (frame + 1) % frames)
   {
+    time--;
+    if (!time)
+      break;
+
     for (int display_y = 0; display_y < DISPLAY_HEIGHT; display_y++)
       for (int display_x = 0; display_x < DISPLAY_WIDTH; display_x++)
 	display_set(display_x, display_y, bits[frame][display_y][display_x]);

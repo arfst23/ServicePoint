@@ -248,10 +248,14 @@ static void filter()
 
 //******************************************************************************
 
-static void animation_bubbles(int delay)
+static void animation_bubbles(int time)
 {
   for (int n = 0; display_button() == 0; n++)
   {
+    time--;
+    if (!time)
+      return;
+
     if (!(n % FRAMES_PER_BUBBLE))
     {
       int x = rand() % (WIDTH + 2 * BORDER - 1) + 1;
@@ -283,16 +287,20 @@ static void animation_bubbles(int delay)
     queue_run();
     filter();
     display_flush();
-    usleep(delay * 1000);
+    usleep(DELAY * 1000);
   }
 }
 
-static void animation_rings(int delay)
+static void animation_rings(int time)
 {
   int x = -1;
   int y = -1;
   for (int n = 0; display_button() == 0; n++)
   {
+    time--;
+    if (!time)
+      return;
+
     if (n % FRAMES_PER_BUBBLE == 0)
     {
       x = rand() % (WIDTH + 2 * BORDER - 1) + 1;
@@ -334,7 +342,7 @@ static void animation_rings(int delay)
     queue_run();
     filter();
     display_flush();
-    usleep(delay * 1000);
+    usleep(DELAY * 1000);
   }
 }
 
@@ -342,7 +350,7 @@ int main(int ac, char *av[])
 {
   bool rings = false;
   int display_select = 0;
-  int delay = DELAY;
+  int timeout = 0;
   for (int ai = 1; ai < ac; ai++)
   {
     if (av[ai][1] == 's')
@@ -352,10 +360,7 @@ int main(int ac, char *av[])
     else if (av[ai][1] == 'r')
       rings = true;
     else if (isdigit(av[ai][1]))
-    {
-      delay = atoi(&av[ai][1]);
-      assert(delay >= MIN_DELAY);
-    }
+      timeout = atoi(&av[ai][1]) * 36;
     else
       assert(0);
   }
@@ -366,9 +371,9 @@ int main(int ac, char *av[])
   display_create(display_select);
 
   if (rings)
-    animation_rings(delay);
+    animation_rings(timeout);
   else
-    animation_bubbles(delay);
+    animation_bubbles(timeout);
 
   display_free();
   return EXIT_SUCCESS;

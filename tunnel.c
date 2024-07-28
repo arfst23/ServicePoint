@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <ctype.h>
 #include <string.h>
 #include <math.h>
 #include <assert.h>
@@ -107,12 +108,15 @@ int direction_y[DIRECTIONS] =
 int main(int ac, char *av[])
 {
   int display_select = 0;
+  int timeout = 0;
   for (int ai = 1; ai < ac; ai++)
   {
     if (av[ai][1] == 's')
       display_select |= DISPLAY_SELECT_SP;
     else if (av[ai][1] == 'x')
       display_select |= DISPLAY_SELECT_GX;
+    else if (isdigit(av[ai][1]))
+      timeout = atoi(&av[ai][1]) * 15;
     else
       assert(0);
   }
@@ -130,6 +134,10 @@ int main(int ac, char *av[])
   bool target_reached = true;
   for (int frame = 0; !display_button(); frame = (frame + 1) % FRAMES)
   {
+    timeout--;
+    if (!timeout)
+      break;
+
     if (target_reached)
       direction_timeout--;
     if (direction_timeout == 0)
