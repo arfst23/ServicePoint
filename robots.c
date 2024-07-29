@@ -405,7 +405,34 @@ void robots_print(robots *state)
 
 static int robots_key_term(__attribute__((unused))robots *state)
 {
-  return getchar();
+  int c = getchar();
+  // map ketpad
+  switch (c)
+  {
+  case '7':
+    return ROBOTS_KEY_NW;
+  case '8':
+    return ROBOTS_KEY_N;
+  case '9':
+    return ROBOTS_KEY_NE;
+  case '4':
+    return ROBOTS_KEY_W;
+  case '5':
+    return ROBOTS_KEY_X;
+  case '6':
+    return ROBOTS_KEY_E;
+  case '1':
+    return ROBOTS_KEY_SW;
+  case '2':
+    return ROBOTS_KEY_S;
+  case '3':
+    return ROBOTS_KEY_SE;
+  case '0':
+    return ROBOTS_KEY_TELE;
+  case '.':
+    return ROBOTS_KEY_W;
+  }
+  return c;
 }
 
 static int robots_key_auto(robots *state)
