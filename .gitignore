@@ -1,0 +1,7 @@
+*.o
+*.pbm
+*~
+core
+deps
+tags
+*.swp

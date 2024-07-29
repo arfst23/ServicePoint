@@ -47,7 +47,12 @@ pbms2sp: pbms2sp.o display.o display_graphix.o graphix.o servicepoint.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
-robots: robots.o robots_auto.o robots_bsd.o term.o port.o display_text.o display.o display_graphix.o graphix.o servicepoint.o
+robots: robots.o robots_auto.o robots_bsd.o term.o port.o display_text.o display.o \
+	display_graphix.o graphix.o servicepoint.o
+	$(REASON)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
+
+bubbles: bubbles.o display.o display_graphix.o graphix.o servicepoint.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
@@ -60,16 +65,6 @@ tunnel: tunnel.o display.o display_graphix.o graphix.o servicepoint.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
 eyes: eyes.o display.o display_graphix.o graphix.o servicepoint.o
-	$(REASON)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
-
-################################################################################
-
-boop: boop.o display.o display_graphix.o graphix.o servicepoint.o
-	$(REASON)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
-
-bubbles: bubbles.o display.o display_graphix.o graphix.o servicepoint.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
@@ -136,7 +131,7 @@ clean:
 
 distclean: clean
 	$(REASON)
-	$(RM) core deps tags spres spclr tty2sp pbm2sp pbms2sp robots bubbles disks tunnel
+	git clean -xdf
 
 -include deps
 
