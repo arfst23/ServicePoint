@@ -5,9 +5,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <ctype.h>
 #include <assert.h>
 
-#define DELAY 25
+#define DELAY 30
  
 //******************************************************************************
 // >>> border
@@ -972,121 +973,183 @@ static void right(int x_off, int y_off)
 // <<<
 //******************************************************************************
 
-// TODO
-// blink
-// eye positions
-//   dizzy
-//   straight
-//   dream left up
-//   left down
-//   right down
-// sleep
+#define SCENES 7
+int scenes[SCENES][5] =
+{ // close left_x left_y right_x, right_y
+  {     0,    0,     0,     0,       0,   }, // X default
+  {    10,  -51,   -44,    -6,     -45,   }, // L left down
+  {    10,   12,   -37,    52,     -40,   }, // R right down
+  {   -10,  -61,    -8,   -11,       5,   }, // T think
+  {   -15,   64,     8,   -13,      18,   }, // H think harder
+  {    10,   22,   -28,   -22,     -37,   }, // D dizzy
+  {   100,    0,   -27,     0,     -28,   }, // S sleep
+};
+
+#define PLAYBOOK "__l_x_r__x..R_x_t_l..H__d_X_s__X"
+#define WAIT_TIME_S 16 // 500ms
+#define WAIT_TIME_L 128 // 2000ms
+#define MOVE_TIME_S 10 // 300ms
+#define MOVE_TIME_L 16 // 500ms
+#define MOVE_TIME_L 16 // 500ms
+#define MOVE_TIME_X 64 // 2000ms
+#define BLINK_TIME 10
+#define BLINK_WAIT 200
 
 int main(int ac, const char *av[])
 {
   int display_select = 0;
+  const char *playbook = PLAYBOOK;
+  int loops = 0;
   for (int ai = 1; ai < ac; ai++)
   {
     assert(av[ai][0] == '-');
-    switch (av[ai][1])
-    {
-    case 'x':
-      display_select |= DISPLAY_SELECT_GX;
-      break;
-    case 's':
+    if (av[ai][1] == 's')
       display_select |= DISPLAY_SELECT_SP;
-      break;
-    default:
+    else if (av[ai][1] == 'x')
+      display_select |= DISPLAY_SELECT_GX;
+    else if (av[ai][1] == 'p')
+      playbook = &av[ai][2];
+    else if (isdigit(av[ai][1]))
+      loops = atoi(&av[ai][1]);
+    else
       assert(0);
-    }
   }
   display_create(display_select);
 
-  int mode = 0;
-  int axis = 0;
+  int close_scene = 0;
+
   int left_x = 0;
   int left_y = 0;
   int right_x = 0;
   int right_y = 0;
-  int close = 0;
+
+  int blink_time = 0;
+  int blink_wait = BLINK_WAIT;
+
+  int scene = 0;
+  int move_time = 0;
+
+  int wait_time = 0;
+
+  int position = 0;
+
   for (;;)
   {
+    if (move_time)
+    {
+      close_scene += (scenes[scene][0] - close_scene) / move_time;
+      left_x += (scenes[scene][1] - left_x) / move_time;
+      left_y += (scenes[scene][2] - left_y) / move_time;
+      right_x += (scenes[scene][3] - right_x) / move_time;
+      right_y += (scenes[scene][4] - right_y) / move_time;
+      move_time--;
+    }
+
+    if (wait_time)
+      wait_time--;
+
+    if (blink_wait)
+    {
+      blink_wait--;
+      if (!blink_wait)
+	blink_time = BLINK_TIME;
+    }
+    else if (blink_time)
+    {
+      blink_time--;
+      if (!blink_time)
+	blink_wait = BLINK_WAIT;
+    }
+    
+    int close_blink[BLINK_TIME + 1] = { -20, 0, 25, 50, 75, 100, 100, 75, 25, 0 };
+
+    int close = close_scene > close_blink[blink_time] ? close_scene : close_blink[blink_time];
+
     display_clear();
     border();
     lids(close);
     left(left_x, left_y);
     right(right_x, right_y);
     
-    int button = display_button();
-    switch (button)
+    if (!move_time && !wait_time)
     {
-    case 9:
-      goto END;
+      switch (playbook[position])
+      {
+      case '.':
+	wait_time = WAIT_TIME_S;
+	break;
+      case '_':
+	wait_time = WAIT_TIME_L;
+	break;
+      case 'x':
+	move_time = MOVE_TIME_L;
+	scene = 0;
+	break;
+      case 'X':
+	move_time = MOVE_TIME_S;
+	scene = 0;
+	break;
+      case 'l':
+	move_time = MOVE_TIME_L;
+	scene = 1;
+	break;
+      case 'L':
+	move_time = MOVE_TIME_S;
+	scene = 1;
+	break;
+      case 'r':
+	move_time = MOVE_TIME_L;
+	scene = 2;
+	break;
+      case 'R':
+	move_time = MOVE_TIME_S;
+	scene = 2;
+	break;
+      case 't':
+	move_time = MOVE_TIME_L;
+	scene = 3;
+	break;
+      case 'T':
+	move_time = MOVE_TIME_S;
+	scene = 3;
+	break;
+      case 'h':
+	move_time = MOVE_TIME_L;
+	scene = 4;
+	break;
+      case 'H':
+	move_time = MOVE_TIME_S;
+	scene = 4;
+	break;
+      case 'd':
+	move_time = MOVE_TIME_L;
+	scene = 5;
+	break;
+      case 'D':
+	move_time = MOVE_TIME_S;
+	scene = 5;
+	break;
+      case 's':
+	move_time = MOVE_TIME_X;
+	scene = 6;
+	break;
+      default:
+	assert(0);
+      }
 
-    case 1:
-      mode = 1;
-      break;
-    case 2:
-      mode = 0;
-      break;
-    case 3:
-      mode = 2;
-      break;
-    case 8:
-      axis = !axis;
-      break;
-
-    case 4: // up
-      if (mode == 0)
+      position++;
+      if (!playbook[position])
       {
-	if (close > -20)
-	  close--;
+	position = 0;
+	loops--;
+	if (!loops)
+	  break;
       }
-      else if (mode == 1)
-      {
-	if (axis)
-	  left_x++;
-	else
-	  left_y++;
-      }
-      else if (mode == 2)
-      {
-	if (axis)
-	  right_x--;
-	else
-	  right_y--;
-      }
-      break;
-    case 5: // down
-      if (mode == 0)
-      {
-	if (close < 100)
-	  close++;
-      }
-      else if (mode == 1)
-      {
-	if (axis)
-	  left_x--;
-	else
-	  left_y--;
-      }
-      else if (mode == 2)
-      {
-	if (axis)
-	  right_x++;
-	else
-	  right_y++;
-      }
-      break;
     }
-
-    if (button)
-      printf("close=%d left=%d/%d right=%d/%d\n", close, left_x, left_y, right_x, right_y);
 
     display_flush();
     usleep(DELAY * 1000);
   }
-END:
 
   display_free();
   return EXIT_SUCCESS;

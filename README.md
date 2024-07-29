@@ -120,11 +120,21 @@ An animation of 2 eyes, blinking and looking into different directions
 
   - `-x`: use service point display emulator
   - `-s`: send to service point display
-  - `-23`: time in seconds to run
+  - `-p...`: gives a playbook as string; chard mean:
+    - `_`: wait for 2000ms 
+    - `.`: wait for 250ms
+    - `x` / `X`: move eyes straight slow / fast
+    - `l` / `l`: move eyes left down slow / fast
+    - `r` / `R`: move eyes right down slow / fast
+    - `t` / `T`: move eyes up thinking slow / fast
+    - `h` / `H`: move eyes up thinking hard slow / fast
+    - `d` / `D`: move eyes dizzy slow / fast
+    - `s`: eyes fall asleep very slow 
+  - `-23`: number of times the playbook is played
 
 ### Examples
 
-  eyes -s -30
+    eyes -s -x -p_ # look straight only
 
 ## Demo
 

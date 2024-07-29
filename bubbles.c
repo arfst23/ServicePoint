@@ -353,6 +353,7 @@ int main(int ac, char *av[])
   int timeout = 0;
   for (int ai = 1; ai < ac; ai++)
   {
+    assert(av[ai][0] == '-');
     if (av[ai][1] == 's')
       display_select |= DISPLAY_SELECT_SP;
     else if (av[ai][1] == 'x')

@@ -29,6 +29,7 @@ int main(int ac, const char *av[])
   int ai;
   for (ai = 1; ai < ac; ai++)
   {
+    assert(av[ai][0] == '-');
     if (av[ai][0] != '-')
       break;
     if (av[ai][1] == 'r')
