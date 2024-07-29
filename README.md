@@ -116,13 +116,18 @@ Display a fly through a tunnel animation.
 
 An animation of 2 eyes, blinking and looking into different directions
 
+The default storyline is:
+  - look straight for some time
+  - look around, discover something iteresting on the right
+  - think about it, thing even harder
+  - feel dizzy from thinking, fall asleep
+
 ### Options
 
   - `-x`: use service point display emulator
   - `-s`: send to service point display
-  - `-p...`: gives a playbook as string; chard mean:
-    - `_`: wait for 2000ms 
-    - `.`: wait for 250ms
+  - `-p...`: provide a playbook as string; chars mean:
+    - `.` / `_`: wait short / long
     - `x` / `X`: move eyes straight slow / fast
     - `l` / `l`: move eyes left down slow / fast
     - `r` / `R`: move eyes right down slow / fast

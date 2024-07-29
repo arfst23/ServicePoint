@@ -9,6 +9,18 @@
 #include <assert.h>
 
 #define DELAY 30
+#define SCENES 7
+
+#define PLAYBOOK "X__l_x_r__x..R_x_t_l..H__d_X_s__"
+
+#define WAIT_TIME_S 16 // 500ms
+#define WAIT_TIME_L 128 // 2000ms
+#define MOVE_TIME_S 10 // 300ms
+#define MOVE_TIME_L 16 // 500ms
+#define MOVE_TIME_L 16 // 500ms
+#define MOVE_TIME_X 64 // 2000ms
+#define BLINK_TIME 10
+#define BLINK_WAIT 200 // 3125ms
  
 //******************************************************************************
 // >>> border
@@ -973,7 +985,7 @@ static void right(int x_off, int y_off)
 // <<<
 //******************************************************************************
 
-#define SCENES 7
+// TODO adapt
 int scenes[SCENES][5] =
 { // close left_x left_y right_x, right_y
   {     0,    0,     0,     0,       0,   }, // X default
@@ -984,16 +996,6 @@ int scenes[SCENES][5] =
   {    10,   22,   -28,   -22,     -37,   }, // D dizzy
   {   100,    0,   -27,     0,     -28,   }, // S sleep
 };
-
-#define PLAYBOOK "__l_x_r__x..R_x_t_l..H__d_X_s__X"
-#define WAIT_TIME_S 16 // 500ms
-#define WAIT_TIME_L 128 // 2000ms
-#define MOVE_TIME_S 10 // 300ms
-#define MOVE_TIME_L 16 // 500ms
-#define MOVE_TIME_L 16 // 500ms
-#define MOVE_TIME_X 64 // 2000ms
-#define BLINK_TIME 10
-#define BLINK_WAIT 200
 
 int main(int ac, const char *av[])
 {
