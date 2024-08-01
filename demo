@@ -3,14 +3,17 @@
 make all pbm
 
 pbms2sp -r -x -s -20 frame-??.pbm
+sleep 1
 spclr
 sleep 3
 
-robots -t -s -a -d -5
+robots -t -s -a -d -3
+sleep 1
 spclr
 sleep 3
 
 bubbles -x -s -30
+sleep 1
 spclr
 sleep 3
 
@@ -19,22 +22,32 @@ sleep 1
 spclr
 sleep 3
 
-disks -x -s -60
+disks -x -s -120
+sleep 1
 spclr
 sleep 3
 
-robots -t -s -b -d -5
+robots -t -s -b -d -3
+sleep 1
 spclr
 sleep 3
 
 tunnel -x -s -30
+sleep 1
 spclr
 sleep 3
 
-# eyes -x -s -30
-# spclr
-# sleep 3
+eyes -x -s -2
+sleep 1
+spclr
+sleep 3
 
-echo 'https://github.com/arfst23/ServicePoint' | tty2sp -x -s
-sleep 10
+cat << EOF | tty2sp -s -x
+app
+https://github.com/arfst23/ServicePoint
+
+lib
+https://github.com/cccb/servicepoint
+EOF
+sleep 5
 spclr

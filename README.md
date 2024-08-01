@@ -16,6 +16,7 @@ The access to the Service Point display is done via https://github.com/cccb/serv
   - `-r`: reverse
   - `-x`: use service point display emulator
   - `-s`: send to service point display
+  - `-w`: wait for button press to terminate
   - `-23`: time in seconds to run
 
 ### Files

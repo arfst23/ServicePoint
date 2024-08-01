@@ -11,7 +11,7 @@
 #define DELAY 30
 #define SCENES 7
 
-#define PLAYBOOK "X__l_x_r__x..R_x_t_l..H__d_X_s__"
+#define PLAYBOOK "X__l_x_r__x..R_x_t_r..H__d_X_s__"
 
 #define WAIT_TIME_S 16 // 500ms
 #define WAIT_TIME_L 128 // 2000ms
@@ -989,12 +989,12 @@ static void right(int x_off, int y_off)
 int scenes[SCENES][5] =
 { // close left_x left_y right_x, right_y
   {     0,    0,     0,     0,       0,   }, // X default
-  {    10,  -51,   -44,    -6,     -45,   }, // L left down
-  {    10,   12,   -37,    52,     -40,   }, // R right down
-  {   -10,  -61,    -8,   -11,       5,   }, // T think
-  {   -15,   64,     8,   -13,      18,   }, // H think harder
-  {    10,   22,   -28,   -22,     -37,   }, // D dizzy
-  {   100,    0,   -27,     0,     -28,   }, // S sleep
+  {    15,  -57,   -43,    -8,     -42,   }, // L left down
+  {    15,    6,   -47,    45,     -46,   }, // R right down
+  {   -10,  -52,     7,    -8,      18,   }, // T think
+  {   -15,  -52,    23,    -8,      35,   }, // H think harder
+  {    10,   13,   -26,   -13,     -30,   }, // D dizzy
+  {   100,    0,   -32,     0,     -34,   }, // S sleep
 };
 
 int main(int ac, const char *av[])

@@ -41,6 +41,7 @@ static void screen_display()
 int main(int ac, const char *av[])
 {
   int display_select = 0;
+  bool wait = false;
   for (int ai = 1; ai < ac; ai++)
   {
     assert(av[ai][0] == '-');
@@ -51,6 +52,9 @@ int main(int ac, const char *av[])
       break;
     case 's':
       display_select |= DISPLAY_SELECT_SP;
+      break;
+    case 'w':
+      wait = true;
       break;
     default:
       assert(0);
@@ -141,7 +145,8 @@ int main(int ac, const char *av[])
     usleep(50000); // 50ms
   }
 
-  display_wait();
+  if (wait)
+    display_wait();
   display_free();
 }
 
