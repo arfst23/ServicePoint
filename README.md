@@ -142,6 +142,23 @@ The default storyline is:
 
     eyes -s -x -p_ # look straight only
 
+## Airport
+
+Emulator for a [Split-flap display](https://en.wikipedia.org/wiki/Split-flap_display)
+like the ones that used to be in airports.
+
+Reads from standard in, a blank line starts the display to update.
+
+### Options
+
+  - `-x`: use service point display emulator
+  - `-s`: send to service point display
+  - `-23`: time in seconds to run
+
+### Examples
+
+    friedrichstrasse | airport -x -s
+
 ## Demo
 
 Show off all.

@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <ctype.h>
 #include <string.h>
+#include <time.h>
 #include <assert.h>
 
 #define ROWS (DISPLAY_TILES_VERT / 2) // 10
@@ -1089,7 +1090,7 @@ static void clr()
 int main(int ac, char *av[])
 {
   int display_select = 0;
-  int timeout = 0;
+  time_t timeout = 0;
   for (int ai = 1; ai < ac; ai++)
   {
     assert(av[ai][0] == '-');
@@ -1098,7 +1099,7 @@ int main(int ac, char *av[])
     else if (av[ai][1] == 'x')
       display_select |= DISPLAY_SELECT_GX;
     else if (isdigit(av[ai][1]))
-      timeout = atoi(&av[ai][1]) * 36;
+      timeout = atoi(&av[ai][1]) + time(NULL);
     else
       assert(0);
   }
@@ -1114,6 +1115,9 @@ int main(int ac, char *av[])
 
     for (;;)
     {
+      if (timeout && time(NULL) > timeout)
+	goto END;
+
       int c = getchar();
       if (c == EOF)
 	goto END;
