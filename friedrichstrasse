@@ -1,0 +1,141 @@
+#!/usr/bin/perl -w
+################################################################################
+
+use strict;
+
+$| = 1;
+
+my $url = 'https://sbahn.berlin/index.php?type=9710697120&station=128&L=0';
+
+sub schedule()
+{
+
+################################################################################
+# >>> schedule
+
+  my $schedule = `curl -s '$url' | iconv -f utf-8 -t iso-8859-15 -c`;
+  $schedule =~ s/<.*?>/ /mg;
+
+  my @schedule;
+
+################################################################################
+
+  my $sbahn = $schedule;
+  $sbahn =~ s/^.*?S-Bahn//s;
+  $sbahn =~ s/U-Bahn.*//s;
+  my @sbahn = map { s/^\s*//; s/\s*$//; $_ } split "\n", $sbahn;
+  @sbahn = map { s/^S1  S2  S25  S3  S7  S9\s*//; $_ } @sbahn;
+  @sbahn = map { s/Linie\s+Zeit\s+\+Abweichung\s+Richtung\s+Gleis\s*//; $_ } @sbahn;
+  @sbahn = map { s/\s+\(Berlin\)$//; s/\s+\(bei Berlin\)$//; s/^S //; s/^S\+U //; s/ Bhf$//; $_ } @sbahn;
+  @sbahn = grep { $_ and !/^Gleis/ and !/ min$/ } @sbahn;
+
+  while (@sbahn)
+  {
+    my $line = shift @sbahn;
+    my $time = shift @sbahn;
+    my $dest = shift @sbahn;
+    push @schedule, [ 'S', $line, $time, $dest ];
+  }
+
+################################################################################
+
+  my $ubahn = $schedule;
+  $ubahn =~ s/^.*?U-Bahn//s;
+  $ubahn =~ s/Bus.*//s;
+  my @ubahn = map { s/^\s*//; s/\s*$//; $_ } split "\n", $ubahn;
+  @ubahn = map { s/Linie\s+Zeit\s+\+Abweichung\s+Richtung\s+Gleis\s*//; $_ } @ubahn;
+  @ubahn = map { s/^U //; s/^S\+U //; s/.*, //; $_ } @ubahn;
+  @ubahn = grep { $_ and !/ min$/ } @ubahn;
+
+  while (@ubahn)
+  {
+    my $line = shift @ubahn;
+    my $time = shift @ubahn;
+    my $dest = shift @ubahn;
+    push @schedule, [ 'U', $line, $time, $dest ];
+  }
+
+################################################################################
+
+  my $bus = $schedule;
+  $bus =~ s/^.*?Bus//s;
+  $bus =~ s/Tram.*//s;
+  my @bus = map { s/^\s*//; s/\s*$//; $_ } split "\n", $bus;
+  @bus = map { s/Linie\s+Zeit\s+\+Abweichung\s+Richtung\s+Gleis\s*//; $_ } @bus;
+  @bus = map { s/ -&gt; .*//; s/ via .*//; s/^S //; s/^S\+U //; s/^U //; s/str\.$/straﬂe/; $_ } @bus;
+  @bus = grep { $_ and !/ min$/ } @bus;
+
+  while (@bus)
+  {
+    my $line = shift @bus;
+    my $time = shift @bus;
+    my $dest = shift @bus;
+    push @schedule, [ 'B', $line, $time, $dest ];
+  }
+
+################################################################################
+
+  my $tram = $schedule;
+  $tram =~ s/^.*?Tram//s;
+  $tram =~ s/Regionalverkehr.*//s;
+  my @tram = map { s/^\s*//; s/\s*$//; $_ } split "\n", $tram;
+  @tram = map { s/Linie\s+Zeit\s+\+Abweichung\s+Richtung\s+Gleis\s*//; $_ } @tram;
+  @tram = map { s/.*, //; s/str\.$/straﬂe/; $_ } @tram;
+  @tram = grep { $_ and !/ min$/ } @tram;
+
+  while (@tram)
+  {
+    my $line = shift @tram;
+    my $time = shift @tram;
+    my $dest = shift @tram;
+    push @schedule, [ 'T', $line, $time, $dest ];
+  }
+
+################################################################################
+
+  my $regio = $schedule;
+  $regio =~ s/^.*?Regionalverkehr//s;
+  my @regio = map { s/^\s*//; s/\s*$//; $_ } split "\n", $regio;
+  @regio = map { s/Linie\s+Zeit\s+\+Abweichung\s+Richtung\s+Gleis\s*//; $_ } @regio;
+  @regio = map { s/^S //; s/^S\+U //; s/^U //; $_ } @regio;
+  @regio = map { s/\s+\(Berlin\)$//; s/, .*//; s/ Bhf$//; $_ } @regio;
+  @regio = grep { $_ and !/ min$/ } @regio;
+
+  while (@regio)
+  {
+    my $line = shift @regio;
+    my $time = shift @regio;
+    my $dest = shift @regio;
+    push @schedule, [ 'R', $line, $time, $dest ];
+  }
+
+# <<<
+################################################################################
+
+  @schedule = sort { $$a[2] cmp $$b[2] } @schedule;
+  @schedule = (( grep { $$_[2] !~ /^0/ } @schedule ), ( grep { $$_[2] =~ /^0/ } @schedule ));
+
+  return @schedule;
+}
+
+################################################################################
+
+while (1)
+{
+  my @s = schedule;
+
+  foreach my $connection (@s[ 0..9 ])
+  {
+    $$connection[2] =~ s/://;
+    $$connection[3] =~ s/‰/ae/g;
+    $$connection[3] =~ s/ˆ/oe/g;
+    $$connection[3] =~ s/¸/ue/g;
+    $$connection[3] =~ s/ﬂ/ss/g;
+    printf "%4s %-4s %s\n", @$connection[2, 1, 3];
+  }
+  print "\n";
+
+  sleep 30;
+}
+
+################################################################################
