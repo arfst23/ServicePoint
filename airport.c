@@ -18,7 +18,7 @@
 
 #define CHARS 37
 #define FLIP_DELAY 40
-#define FLIP_BREAK 80
+#define FLIP_BREAK 40
 
 #define delay(ms) usleep(ms * 1000)
 
