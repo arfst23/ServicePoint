@@ -20,7 +20,7 @@ REASON		= @if [ -f $@ ]; then echo "[$@: $?]"; else echo "[$@]"; fi
 
 ################################################################################
 
-all: spres spclr tty2sp pbm2sp pbms2sp robots bubbles disks tunnel eyes airport
+all: spres spclr tty2sp pbm2sp pbms2sp robots bubbles disks tunnel eyes airport roll
 
 pbm: frame-01.pbm frame-02.pbm frame-03.pbm frame-04.pbm frame-05.pbm \
 	frame-06.pbm frame-07.pbm frame-08.pbm frame-09.pbm frame-10.pbm \
@@ -69,6 +69,10 @@ eyes: eyes.o display.o display_graphix.o graphix.o servicepoint.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
 airport: airport.o display.o display_graphix.o graphix.o servicepoint.o
+	$(REASON)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
+
+roll: roll.o  display_text.o display.o display_graphix.o graphix.o servicepoint.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 

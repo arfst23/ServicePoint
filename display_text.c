@@ -676,8 +676,8 @@ static const uint8_t font[96][8] =
   { // b
     0b10000,
     0b10000,
-    0b10000,
     0b11110,
+    0b10001,
     0b10001,
     0b10001,
     0b11110,
@@ -696,8 +696,8 @@ static const uint8_t font[96][8] =
   { // d
     0b00001,
     0b00001,
-    0b00001,
     0b01111,
+    0b10001,
     0b10001,
     0b10001,
     0b01111,
@@ -736,8 +736,8 @@ static const uint8_t font[96][8] =
   { // h
     0b10000,
     0b10000,
-    0b10000,
     0b11110,
+    0b10001,
     0b10001,
     0b10001,
     0b10001,
@@ -986,6 +986,34 @@ void display_chr(int row, int col, char c, bool rev)
     uint8_t mask = font[i][line] << 1;
     if (rev)
       mask = ~mask;
+    for (int bit = 0; bit < 7; bit++)
+    {
+      bool pixel = mask & 0b1000000;
+      display_set(x + bit, y + line, pixel);
+      mask <<= 1;
+    }
+  }
+}
+
+//******************************************************************************
+
+void display_chr_offset(int row, int col, char c, int off)
+{
+  assert(row >= 0);
+  assert(row < DISPLAY_ROWS);
+  assert(col >= 0);
+  assert(col < DISPLAY_COLS);
+  assert(c >= ' ');
+  assert(c <= '~');
+
+  int x = col * DISPLAY_TILE_SIZE;
+  int y = row * DISPLAY_TILE_SIZE;
+  int i = c - ' ';
+
+  for (int line = 0; line < 8; line++)
+  {
+    int l = line - off;
+    uint8_t mask = l >= 0 && l < 8 ? font[i][l] << 1 : 0;
     for (int bit = 0; bit < 7; bit++)
     {
       bool pixel = mask & 0b1000000;

@@ -159,6 +159,21 @@ Reads from standard in, a blank line starts the display to update.
 
     friedrichstrasse | airport -x -s
 
+## Roll
+
+Read from stdin up to an empty line, display 56x20 charackers, repeat.
+Charakters are updated with an roling effect
+
+### Options
+
+  - `-x`: use service point display emulator
+  - `-s`: send to service point display
+  - `-23`: time in seconds to run
+
+### Examples
+
+    friedrichstrasse | roll -x -s
+
 ## Demo
 
 Show off all.

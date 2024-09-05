@@ -63,7 +63,9 @@ sub schedule()
 while (1)
 {
   my @connects = schedule;
-  @connects = sort { $a->{time} cmp $b->{time} } @connects;
+  my @c0 = sort { $a->{time} cmp $b->{time} } grep { $_->{time} =~ /^0/ } @connects;
+  my @c1 = sort { $a->{time} cmp $b->{time} } grep { $_->{time} !~ /^0/ } @connects;
+  @connects = (@c1, @c0);
 
   foreach my $connect (@connects)
   {

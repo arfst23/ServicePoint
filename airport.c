@@ -17,7 +17,7 @@
 #define SIZE (2 * DISPLAY_TILE_SIZE) // 16
 
 #define CHARS 37
-#define FLIP_DELAY 40
+#define FLIP_DELAY 35
 #define FLIP_BREAK 40
 
 #define delay(ms) usleep(ms * 1000)
