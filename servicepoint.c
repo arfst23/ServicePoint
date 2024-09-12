@@ -1,5 +1,6 @@
 //******************************************************************************
 
+#define _SP_CONST
 #include "servicepoint.h"
 #include "sp.h"
 
@@ -29,20 +30,18 @@ sp_display sp_display_create(void)
 void sp_display_reset(const sp_display display)
 {
   assert(display);
-  struct sp_Command *command = sp_command_hard_reset();
+  struct SPCommand *command = sp_command_hard_reset();
   assert(command);
-  struct sp_Packet *packet = sp_packet_from_command(command);
-  bool sent = sp_connection_send(display, packet);
+  bool sent = sp_connection_send_command(display, command);
   assert(sent);
 }
 
 void sp_display_clear(const sp_display display)
 {
   assert(display);
-  struct sp_Command *command = sp_command_clear();
+  struct SPCommand *command = sp_command_clear();
   assert(command);
-  struct sp_Packet *packet = sp_packet_from_command(command);
-  bool sent = sp_connection_send(display, packet);
+  bool sent = sp_connection_send_command(display, command);
   assert(sent);
 }
 
@@ -50,27 +49,25 @@ void sp_display_brightness(const sp_display display, sp_brightness brightness)
 {
   assert(display);
   assert(brightness < SP_BRIGHTNESS_LEVELS);
-  struct sp_Command *command = sp_command_brightness((uint8_t)brightness);
+  struct SPCommand *command = sp_command_brightness((uint8_t)brightness);
   assert(command);
-  struct sp_Packet *packet = sp_packet_from_command(command);
-  bool sent = sp_connection_send(display, packet);
+  bool sent = sp_connection_send_command(display, command);
   assert(sent);
 }
 
 void sp_display_fade(const sp_display display)
 {
   assert(display);
-  struct sp_Command *command = sp_command_fade_out();
+  struct SPCommand *command = sp_command_fade_out();
   assert(command);
-  struct sp_Packet *packet = sp_packet_from_command(command);
-  bool sent = sp_connection_send(display, packet);
+  bool sent = sp_connection_send_command(display, command);
   assert(sent);
 }
 
 void sp_display_free(sp_display display)
 {
   assert(display);
-  sp_connection_dealloc(display);
+  sp_connection_free(display);
 }
 
 // <<<
@@ -97,7 +94,7 @@ sp_bitvec sp_bitvec_copy(const sp_bitvec bitvec)
 void sp_bitvec_free(sp_bitvec bitvec)
 {
   assert(bitvec);
-  sp_bit_vec_dealloc(bitvec);
+  sp_bit_vec_free(bitvec);
 }
 
 sp_size sp_bitvec_size(const sp_bitvec bitvec)
@@ -139,10 +136,9 @@ void sp_display_bitvec_set(const sp_display display, sp_bitvec bitvec,
   assert(x + sp_bitvec_size(bitvec) <= SP_DISPLAY_WIDTH);
   assert(y < SP_DISPLAY_HEIGHT);
   sp_size offset = x / SP_TILE_SIZE + y * SP_TILES_VERT;
-  struct sp_Command *command = sp_command_bitmap_linear(offset, bitvec, SP_COMPRESSION);
+  struct SPCommand *command = sp_command_bitmap_linear(offset, bitvec, SP_COMPRESSION);
   assert(command);
-  struct sp_Packet *packet = sp_packet_from_command(command);
-  bool sent = sp_connection_send(display, packet);
+  bool sent = sp_connection_send_command(display, command);
   assert(sent);
 }
 
@@ -155,10 +151,9 @@ void sp_display_bitvec_and(const sp_display display, sp_bitvec bitvec,
   assert(x + sp_bitvec_size(bitvec) <= SP_DISPLAY_WIDTH);
   assert(y < SP_DISPLAY_HEIGHT);
   sp_size offset = x / SP_TILE_SIZE + y * SP_TILES_VERT;
-  struct sp_Command *command = sp_command_bitmap_linear_and(offset, bitvec, SP_COMPRESSION);
+  struct SPCommand *command = sp_command_bitmap_linear_and(offset, bitvec, SP_COMPRESSION);
   assert(command);
-  struct sp_Packet *packet = sp_packet_from_command(command);
-  bool sent = sp_connection_send(display, packet);
+  bool sent = sp_connection_send_command(display, command);
   assert(sent);
 }
 
@@ -171,10 +166,9 @@ void sp_display_bitvec_or(const sp_display display, sp_bitvec bitvec,
   assert(x + sp_bitvec_size(bitvec) <= SP_DISPLAY_WIDTH);
   assert(y < SP_DISPLAY_HEIGHT);
   sp_size offset = x / SP_TILE_SIZE + y * SP_TILES_VERT;
-  struct sp_Command *command = sp_command_bitmap_linear_or(offset, bitvec, SP_COMPRESSION);
+  struct SPCommand *command = sp_command_bitmap_linear_or(offset, bitvec, SP_COMPRESSION);
   assert(command);
-  struct sp_Packet *packet = sp_packet_from_command(command);
-  bool sent = sp_connection_send(display, packet);
+  bool sent = sp_connection_send_command(display, command);
   assert(sent);
 }
 
@@ -203,7 +197,7 @@ sp_bitmap sp_bitmap_copy(const sp_bitmap bitmap)
 void sp_bitmap_free(sp_bitmap bitmap)
 {
   assert(bitmap);
-  sp_pixel_grid_dealloc(bitmap);
+  sp_pixel_grid_free(bitmap);
 }
 
 sp_size sp_bitmap_width(const sp_bitmap bitmap)
@@ -250,11 +244,10 @@ void sp_display_bitmap_set(const sp_display display, sp_bitmap bitmap,
   assert(x % SP_TILE_SIZE == 0);
   assert(x + sp_bitmap_width(bitmap) <= SP_DISPLAY_WIDTH);
   assert(y + sp_bitmap_height(bitmap) <= SP_DISPLAY_HEIGHT);
-  struct sp_Command *command = sp_command_bitmap_linear_win((size_t)x,
+  struct SPCommand *command = sp_command_bitmap_linear_win((size_t)x,
       (size_t)y, bitmap, SP_COMPRESSION);
   assert(command);
-  struct sp_Packet *packet = sp_packet_from_command(command);
-  bool sent = sp_connection_send(display, packet);
+  bool sent = sp_connection_send_command(display, command);
   assert(sent);
 }
 
@@ -264,7 +257,7 @@ void sp_display_bitmap_set(const sp_display display, sp_bitmap bitmap,
 
 sp_brightnessmap sp_brightnessmap_create(sp_size width, sp_size height)
 {
-  sp_brightnessmap brightnessmap = sp_byte_grid_new((size_t)width, (size_t)height);
+  sp_brightnessmap brightnessmap = sp_brightness_grid_new((size_t)width, (size_t)height);
   assert(brightnessmap);
   return brightnessmap;
 }
@@ -272,7 +265,7 @@ sp_brightnessmap sp_brightnessmap_create(sp_size width, sp_size height)
 sp_brightnessmap sp_brightnessmap_copy(sp_brightnessmap brightnessmap)
 {
   assert(brightnessmap);
-  sp_brightnessmap copy = sp_byte_grid_clone(brightnessmap);
+  sp_brightnessmap copy = sp_brightness_grid_clone(brightnessmap);
   assert(copy);
   return copy;
 }
@@ -280,19 +273,19 @@ sp_brightnessmap sp_brightnessmap_copy(sp_brightnessmap brightnessmap)
 void sp_brightnessmap_free(sp_brightnessmap brightnessmap)
 {
   assert(brightnessmap);
-  sp_byte_grid_dealloc(brightnessmap);
+  sp_brightness_grid_free(brightnessmap);
 }
 
 sp_size sp_brightnessmap_width(sp_brightnessmap brightnessmap)
 {
   assert(brightnessmap);
-  return (sp_size)sp_byte_grid_height(brightnessmap);
+  return (sp_size)sp_brightness_grid_height(brightnessmap);
 }
 
 sp_size sp_brightnessmap_height(sp_brightnessmap brightnessmap)
 {
   assert(brightnessmap);
-  return (sp_size)sp_byte_grid_width(brightnessmap);
+  return (sp_size)sp_brightness_grid_width(brightnessmap);
 }
 
 void sp_brightnessmap_set(sp_brightnessmap brightnessmap, sp_size x, sp_size y,
@@ -302,7 +295,7 @@ void sp_brightnessmap_set(sp_brightnessmap brightnessmap, sp_size x, sp_size y,
   assert(x < sp_brightnessmap_width(brightnessmap));
   assert(y < sp_brightnessmap_height(brightnessmap));
   assert(brightness < SP_BRIGHTNESS_LEVELS);
-  sp_byte_grid_set(brightnessmap, (size_t)x, (size_t)y, (uint8_t)brightness);
+  sp_brightness_grid_set(brightnessmap, (size_t)x, (size_t)y, (uint8_t)brightness);
 }
 
 sp_brightness sp_brightnessmap_get(sp_brightnessmap brightnessmap, sp_size x, sp_size y)
@@ -310,14 +303,14 @@ sp_brightness sp_brightnessmap_get(sp_brightnessmap brightnessmap, sp_size x, sp
   assert(brightnessmap);
   assert(x < sp_brightnessmap_width(brightnessmap));
   assert(y < sp_brightnessmap_height(brightnessmap));
-  return (sp_brightness)sp_byte_grid_get(brightnessmap, (size_t)x, (size_t)y);
+  return (sp_brightness)sp_brightness_grid_get(brightnessmap, (size_t)x, (size_t)y);
 }
 
 void sp_brightnessmap_fill(sp_brightnessmap brightnessmap, sp_brightness brightness)
 {
   assert(brightnessmap);
   assert(brightness < SP_BRIGHTNESS_LEVELS);
-  sp_byte_grid_fill(brightnessmap, (uint8_t)brightness);
+  sp_brightness_grid_fill(brightnessmap, (uint8_t)brightness);
 }
 
 //******************************************************************************
@@ -329,10 +322,9 @@ void sp_display_brightnessmap_set(const sp_display display,
   assert(brightnessmap);
   assert(x + sp_brightnessmap_width(brightnessmap) < SP_TILES_HORIZ);
   assert(y + sp_brightnessmap_height(brightnessmap) < SP_TILES_VERT);
-  struct sp_Command *command = sp_command_char_brightness(x, y, brightnessmap);
+  struct SPCommand *command = sp_command_char_brightness(x, y, brightnessmap);
   assert(command);
-  struct sp_Packet *packet = sp_packet_from_command(command);
-  bool sent = sp_connection_send(display, packet);
+  bool sent = sp_connection_send_command(display, command);
   assert(sent);
 }
 

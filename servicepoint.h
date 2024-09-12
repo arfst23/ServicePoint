@@ -8,7 +8,9 @@
 
 typedef uint32_t sp_size;
 
+#ifndef _SP_CONST
 #define SP_TILE_SIZE ((sp_size)8)
+#endif
 #define SP_TILES_HORIZ ((sp_size)56)
 #define SP_TILES_VERT ((sp_size)20)
 #define SP_DISPLAY_WIDTH (SP_TILES_HORIZ * SP_TILE_SIZE)
@@ -20,7 +22,7 @@ typedef uint8_t sp_brightness;
 
 //******************************************************************************
 
-typedef struct sp_Connection* sp_display;
+typedef struct SPConnection* sp_display;
 
 sp_display sp_display_create(void);
 void sp_display_reset(const sp_display display);
@@ -31,7 +33,7 @@ void sp_display_free(sp_display display);
 
 //******************************************************************************
 
-typedef struct sp_BitVec* sp_bitvec;
+typedef struct SPBitVec* sp_bitvec;
 
 sp_bitvec sp_bitvec_create(sp_size size);
 sp_bitvec sp_bitvec_copy(const sp_bitvec bitvec);
@@ -47,7 +49,7 @@ void sp_display_bitvec_or(const sp_display display, sp_bitvec bitvec, sp_size x,
 
 //******************************************************************************
 
-typedef struct sp_PixelGrid* sp_bitmap;
+typedef struct SPPixelGrid* sp_bitmap;
 
 sp_bitmap sp_bitmap_create(sp_size width, sp_size height);
 sp_bitmap sp_bitmap_copy(const sp_bitmap bitmap);
@@ -62,7 +64,7 @@ void sp_display_bitmap_set(const sp_display display, sp_bitmap bitmap, sp_size x
 
 //******************************************************************************
 
-typedef struct sp_ByteGrid* sp_brightnessmap;
+typedef struct SPBrightnessGrid* sp_brightnessmap;
 
 sp_brightnessmap sp_brightnessmap_create(sp_size width, sp_size height);
 sp_brightnessmap sp_brightnessmap_copy(sp_brightnessmap brightnessmap);

@@ -2,6 +2,8 @@
 
 The access to the Service Point display is done via https://github.com/cccb/servicepoint
 
+Run `build` to create or update this library and header.
+
 ## Service Point Display Tools
 
   - `spres`: reset the service point display
