@@ -5,3 +5,6 @@ core
 deps
 tags
 *.swp
+sp.h
+libsp.a
+sp
