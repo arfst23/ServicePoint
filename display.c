@@ -8,11 +8,23 @@
 #include <stdbool.h>
 #include <assert.h>
 
+#if DISPLAY_TILE_SIZE != SP_TILE_SIZE
+#error DISPLAY_TILE_SIZE != SP_TILE_SIZE
+#endif
+
+#if DISPLAY_WIDTH != SP_PIXEL_WIDTH
+#error DISPLAY_WIDTH != SP_PIXEL_WIDTH
+#endif
+
+#if DISPLAY_HEIGHT != SP_PIXEL_HEIGHT
+#error DISPLAY_HEIGHT != SP_PIXEL_HEIGHT
+#endif
+
 static int display_select = 0;
 
 static graphix gx = NULL;
 
-static sp_display display = NULL;
+static sp_connection connection = NULL;
 static sp_bitmap bitmap = NULL;
 
 //******************************************************************************
@@ -28,10 +40,11 @@ void display_create(int select)
   }
   if (display_select & DISPLAY_SELECT_SP)
   {
-    assert(!display);
-    display = sp_display_create();
+    assert(!connection);
+    connection = sp_connection_open(ADDRESS);
+    assert(connection);
     assert(!bitmap);
-    bitmap = sp_bitmap_create(SP_DISPLAY_WIDTH, SP_DISPLAY_HEIGHT);
+    bitmap = sp_bitmap_new(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     sp_bitmap_fill(bitmap, false);
   }
 }
@@ -45,9 +58,9 @@ void display_free(void)
   }
   if (display_select & DISPLAY_SELECT_SP)
   {
-    assert(display);
+    assert(connection);
     assert(bitmap);
-    sp_display_free(display);
+    sp_connection_free(connection);
     sp_bitmap_free(bitmap);
   }
 }
@@ -68,9 +81,9 @@ void display_set(int x, int y, bool value)
   }
   if (display_select & DISPLAY_SELECT_SP)
   {
-    assert(display);
+    assert(connection);
     assert(bitmap);
-    sp_bitmap_set(bitmap, (sp_size)x, (sp_size)y, value);
+    sp_bitmap_set(bitmap, (size_t)x, (size_t)y, value);
   }
 }
 
@@ -100,7 +113,7 @@ void display_clear(void)
   }
   if (display_select & DISPLAY_SELECT_SP)
   {
-    assert(display);
+    assert(connection);
     assert(bitmap);
     sp_bitmap_fill(bitmap, false);
   }
@@ -115,10 +128,14 @@ void display_flush(void)
   }
   if (display_select & DISPLAY_SELECT_SP)
   {
-    assert(display);
+    assert(connection);
     assert(bitmap);
-    sp_bitmap copy = sp_bitmap_copy(bitmap);
-    sp_display_bitmap_set(display, copy, 0, 0);
+    sp_bitmap bitmap_copy = sp_bitmap_clone(bitmap);
+    sp_command command = sp_command_bitmap_linear_win(0, 0, bitmap_copy,
+      SP_COMPRESSION_CODE_LZMA);
+    assert(command);
+    bool sent = sp_connection_send_command(connection, command);
+    assert(sent);
   }
 }
 

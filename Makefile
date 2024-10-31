@@ -27,52 +27,52 @@ pbm: frame-01.pbm frame-02.pbm frame-03.pbm frame-04.pbm frame-05.pbm \
 	frame-11.pbm frame-12.pbm frame-13.pbm frame-14.pbm frame-15.pbm \
 	frame-16.pbm frame-17.pbm frame-18.pbm frame-19.pbm
 
-spres: spres.o servicepoint.o
+spres: spres.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-spclr: spclr.o servicepoint.o
+spclr: spclr.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-tty2sp: tty2sp.o display_text.o display.o display_graphix.o graphix.o servicepoint.o
+tty2sp: tty2sp.o display_text.o display.o display_graphix.o graphix.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
-pbm2sp: pbm2sp.o display.o display_graphix.o graphix.o servicepoint.o
+pbm2sp: pbm2sp.o display.o display_graphix.o graphix.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
-pbms2sp: pbms2sp.o display.o display_graphix.o graphix.o servicepoint.o
+pbms2sp: pbms2sp.o display.o display_graphix.o graphix.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
 robots: robots.o robots_auto.o robots_bsd.o term.o port.o display_text.o display.o \
-	display_graphix.o graphix.o servicepoint.o
+	display_graphix.o graphix.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
-bubbles: bubbles.o display.o display_graphix.o graphix.o servicepoint.o
+bubbles: bubbles.o display.o display_graphix.o graphix.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
-disks: disks.o display.o display_graphix.o graphix.o servicepoint.o
+disks: disks.o display.o display_graphix.o graphix.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
-tunnel: tunnel.o display.o display_graphix.o graphix.o servicepoint.o
+tunnel: tunnel.o display.o display_graphix.o graphix.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
-eyes: eyes.o display.o display_graphix.o graphix.o servicepoint.o
+eyes: eyes.o display.o display_graphix.o graphix.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
-airport: airport.o display.o display_graphix.o graphix.o servicepoint.o
+airport: airport.o display.o display_graphix.o graphix.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
-roll: roll.o  display_text.o display.o display_graphix.o graphix.o servicepoint.o
+roll: roll.o  display_text.o display.o display_graphix.o graphix.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
@@ -83,10 +83,6 @@ graphix_test: graphix_test.o graphix.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 sp_test: sp_test.o
-	$(REASON)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
-
-servicepoint_test: servicepoint_test.o servicepoint.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 

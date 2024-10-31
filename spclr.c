@@ -9,9 +9,13 @@
 
 int main(void)
 {
-  sp_display display = sp_display_create();
-  sp_display_clear(display);
-  sp_display_free(display);
+  sp_connection connection = sp_connection_open(ADDRESS);
+  assert(connection);
+  sp_command command = sp_command_clear();
+  assert(command);
+  bool sent = sp_connection_send_command(connection, command);
+  assert(sent);
+  sp_connection_free(connection);
   return EXIT_SUCCESS;
 }
 

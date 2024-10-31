@@ -26,7 +26,7 @@ Run `make` to build the aps in this repo.
 ### Files
 
   - `sp.h`, `libsp.a`: derived from https://github.com/cccb/servicepoint, checked in for convenience
-  - `servicepoint.h`, `servicepoint.c`: abstraction level to the service point library
+  - `servicepoint.h`: abstraction level to the service point library
   - `graphix.h`, `graphicx.c`: simple X11 window api
   - `display_graphix.h`, `display_graphix.c`: service point display emulation
   - `display.h`, `display.c`: common api for service point display library and emulator
