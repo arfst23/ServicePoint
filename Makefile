@@ -1,5 +1,5 @@
 ##############################################################################
- 
+
 CC		= gcc
 CPPFLAGS	=
 CFLAGS		= -march=native -O3 -funroll-loops -fpic -fstack-protector-all \
@@ -20,7 +20,7 @@ REASON		= @if [ -f $@ ]; then echo "[$@: $?]"; else echo "[$@]"; fi
 
 ################################################################################
 
-all: spres spclr tty2sp pbm2sp pbms2sp robots bubbles disks tunnel eyes airport roll
+all: spres spclr tty2sp pbm2sp pbms2sp robots bubbles disks tunnel eyes airport watch
 
 pbm: frame-01.pbm frame-02.pbm frame-03.pbm frame-04.pbm frame-05.pbm \
 	frame-06.pbm frame-07.pbm frame-08.pbm frame-09.pbm frame-10.pbm \
@@ -72,7 +72,7 @@ airport: airport.o display.o display_graphix.o graphix.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
-roll: roll.o  display_text.o display.o display_graphix.o graphix.o
+watch: watch.o  display_text.o display.o display_graphix.o graphix.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 

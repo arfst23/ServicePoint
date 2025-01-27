@@ -1012,7 +1012,7 @@ void display_chr_offset(int row, int col, char c, int off)
 
   for (int line = 0; line < 8; line++)
   {
-    int l = line - off;
+    int l = line + off;
     uint8_t mask = l >= 0 && l < 8 ? font[i][l] << 1 : 0;
     for (int bit = 0; bit < 7; bit++)
     {

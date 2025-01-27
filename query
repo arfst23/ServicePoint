@@ -1,0 +1,56 @@
+#!/usr/bin/python3
+
+import requests
+import re
+import time
+
+# curl 'https://v6.bvg.transport.rest/locations?poi=false&addresses=false&query=mehringdamm' -s | jq
+# S+U Friedrichstr. Bhf (Berlin) -> 900100001
+id = 900100001
+
+url = 'https://v6.bvg.transport.rest/stops/%d/departures' % (id, )
+params = \
+{
+  'results' : 20,
+  'when' : 'in 8 minutes',
+}
+response = requests.get(url, params = params)
+departures = response.json()['departures']
+deps = []
+str_by_dep = {}
+for departure in departures:
+
+  dep = departure['when']
+  line = departure['line']['name']
+  dest = departure['destination']['name']
+
+  if dep is None:
+    continue
+  dep = dep[11:16]
+
+  dest = re.sub('^S\+U ', '', dest)
+  dest = re.sub('^S ', '', dest)
+  dest = re.sub('^U ', '', dest)
+  dest = re.sub(' \\(Berlin\\)$', '', dest)
+  dest = re.sub(' \\(bei Berlin\\)$', '', dest)
+  dest = re.sub(' Bhf$', '', dest)
+  dest = re.sub(', Bahnhof$', '', dest)
+  dest = re.sub('str.$', 'strasse', dest)
+
+  dest = re.sub('\xe4', 'ae', dest)
+  dest = re.sub('\xfc', 'ue', dest)
+  dest = re.sub('\xf6', 'oe', dest)
+  dest = re.sub('\xdf', 'ss', dest)
+
+  dest = ''.join(c for c in dest if ord(c) < 128)
+
+  str = "%5s  %-4s  %s" % (dep, line, dest)
+
+  if dep not in str_by_dep:
+    str_by_dep[dep] = []
+    deps.append(dep)
+  str_by_dep[dep].append(str)
+
+for dep in deps:
+  for str in sorted(str_by_dep[dep]):
+    print(str)

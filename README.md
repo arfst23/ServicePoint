@@ -161,7 +161,7 @@ Reads from standard in, a blank line starts the display to update.
 
 ### Examples
 
-    friedrichstrasse | airport -x -s
+    airport -x -s
 
 ## Roll
 
