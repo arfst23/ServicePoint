@@ -272,6 +272,13 @@ int main(int ac, char *av[])
     fetch("query");
     diff();
 
+    if (time)
+    {
+      time--;
+      if (!time)
+        break;
+    }
+
     delay(5000);
   }
 #endif
