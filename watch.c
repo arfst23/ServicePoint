@@ -226,6 +226,7 @@ void diff()
 int main(int ac, char *av[])
 {
   int display_select = 0;
+  int time = 0;
   for (int ai = 1; ai < ac; ai++)
   {
     assert(av[ai][0] == '-');
@@ -233,6 +234,8 @@ int main(int ac, char *av[])
       display_select |= DISPLAY_SELECT_SP;
     else if (av[ai][1] == 'x')
       display_select |= DISPLAY_SELECT_GX;
+    else if (isdigit(av[ai][1]))
+      time = atoi(&av[ai][1]);
     else
       assert(0);
   }

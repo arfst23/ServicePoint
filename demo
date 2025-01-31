@@ -42,6 +42,11 @@ sleep 1
 spclr
 sleep 3
 
+watch -x -s -t 10
+sleep 1
+spclr
+sleep 3
+
 cat << EOF | tty2sp -s -x
 app
 https://github.com/arfst23/ServicePoint
