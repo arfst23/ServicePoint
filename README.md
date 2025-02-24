@@ -25,12 +25,12 @@ Run `make` to build the aps in this repo.
 
 ### Files
 
-  - `sp.h`, `libsp.a`: derived from https://github.com/cccb/servicepoint, checked in for convenience
   - `servicepoint.h`: abstraction level to the service point library
   - `graphix.h`, `graphicx.c`: simple X11 window api
   - `display_graphix.h`, `display_graphix.c`: service point display emulation
   - `display.h`, `display.c`: common api for service point display library and emulator
   - `display_text.h`, `display_text.c`: client side text rendering on display
+  - `sp.h`, `libsp.a`: derived from https://github.com/cccb/servicepoint, run `build`
 
 ### Examples
 
@@ -173,7 +173,7 @@ by an ad for the movie
 
   - `-x`: use service point display emulator
   - `-s`: send to service point display
-  - `-23`: time in 10 * seconds to run
+  - `-23`: number of animations (10.5s avg.)
 
 ### Examples
 
@@ -181,14 +181,14 @@ by an ad for the movie
 
 ## Watch
 
-    Queries [transport.rest](https://transport.rest/) for the schedule of train
-    station Friedrichstraﬂe. Displays and updates the schedule in a wavy animation.
+Queries [transport.rest](https://transport.rest) for the schedule of train
+station Friedrichstraﬂe. Displays and updates the schedule in a wavy animation.
 
 ### Options
 
   - `-x`: use service point display emulator
   - `-s`: send to service point display
-  - `-23`: time in 5 * seconds to run
+  - `-23`: number of updates (ever 5s)
 
 ### Examples
 
