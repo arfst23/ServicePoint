@@ -167,7 +167,7 @@ Reads from standard in, a blank line starts the display to update.
 
 Displays 'NICHTS IST SO, WIE ES SCHEINT' in a sliding animation, inspired
 by an ad for the movie
-(23)[https://www.imdb.com/de/title/tt0126765/?ref_=nv_sr_srsg_0_tt_8_nm_0_in_0_q_23%2520nichts%2520]
+[23](https://www.imdb.com/de/title/tt0126765/?ref_=nv_sr_srsg_0_tt_8_nm_0_in_0_q_23%2520nichts%2520)
 
 ### Options
 
@@ -181,8 +181,8 @@ by an ad for the movie
 
 ## Watch
 
-Queries (transport.rest)[https://transport.rest/] for the schedule of train
-station Friedrichstraﬂe. Displays and updates the schedule in a wavy animation.
+    Queries [transport.rest](https://transport.rest/) for the schedule of train
+    station Friedrichstraﬂe. Displays and updates the schedule in a wavy animation.
 
 ### Options
 
