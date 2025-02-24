@@ -20,7 +20,7 @@ REASON		= @if [ -f $@ ]; then echo "[$@: $?]"; else echo "[$@]"; fi
 
 ################################################################################
 
-all: spres spclr tty2sp pbm2sp pbms2sp robots bubbles disks tunnel eyes airport watch
+all: spres spclr tty2sp pbm2sp pbms2sp robots bubbles disks tunnel eyes airport watch nichts
 
 pbm: frame-01.pbm frame-02.pbm frame-03.pbm frame-04.pbm frame-05.pbm \
 	frame-06.pbm frame-07.pbm frame-08.pbm frame-09.pbm frame-10.pbm \
@@ -37,7 +37,7 @@ spclr: spclr.o
 
 tty2sp: tty2sp.o display_text.o display.o display_graphix.o graphix.o
 	$(REASON)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 pbm2sp: pbm2sp.o display.o display_graphix.o graphix.o
 	$(REASON)
@@ -50,31 +50,35 @@ pbms2sp: pbms2sp.o display.o display_graphix.o graphix.o
 robots: robots.o robots_auto.o robots_bsd.o term.o port.o display_text.o display.o \
 	display_graphix.o graphix.o
 	$(REASON)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 bubbles: bubbles.o display.o display_graphix.o graphix.o
 	$(REASON)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 disks: disks.o display.o display_graphix.o graphix.o
 	$(REASON)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 tunnel: tunnel.o display.o display_graphix.o graphix.o
 	$(REASON)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 eyes: eyes.o display.o display_graphix.o graphix.o
 	$(REASON)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 airport: airport.o display.o display_graphix.o graphix.o
 	$(REASON)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 watch: watch.o  display_text.o display.o display_graphix.o graphix.o
 	$(REASON)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+nichts: nichts.o display.o display_graphix.o graphix.o
+	$(REASON)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 ################################################################################
 

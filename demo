@@ -2,7 +2,7 @@
 
 make all pbm
 
-pbms2sp -r -x -s -20 frame-??.pbm
+pbms2sp -r -x -s -30 frame-??.pbm
 sleep 1
 spclr
 sleep 3
@@ -42,7 +42,12 @@ sleep 1
 spclr
 sleep 3
 
-watch -x -s -t 10
+nichts -x -s -5
+sleep 1
+spclr
+sleep 3
+
+watch -x -s -5
 sleep 1
 spclr
 sleep 3
