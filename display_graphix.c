@@ -1,7 +1,7 @@
 //******************************************************************************
 
 #include "graphix.h"
-#include "servicepoint.h"
+#include "sp.h"
 
 #include <stdbool.h>
 #include <assert.h>
@@ -19,9 +19,9 @@
 
 #define BORDER_PADDING (13 * OFFSET)
 #define PARTS (SEPARATORS + 1)
-#define PART_HEIGHT (SP_DISPLAY_HEIGHT / PARTS)
-#define WIDTH (2 * BORDER_WIDTH + SP_DISPLAY_WIDTH * OFFSET + PIXEL_SPACING + 2 * BORDER_PADDING)
-#define HEIGHT (2 * BORDER_WIDTH + SP_DISPLAY_HEIGHT * OFFSET \
+#define PART_HEIGHT (SP_HEIGHT / PARTS)
+#define WIDTH (2 * BORDER_WIDTH + SP_WIDTH * OFFSET + PIXEL_SPACING + 2 * BORDER_PADDING)
+#define HEIGHT (2 * BORDER_WIDTH + SP_HEIGHT * OFFSET \
     + PARTS * PIXEL_SPACING + SEPARATORS * SEPARATOR_HEIGHT + 2 * SEPARATOR_PADDING)
 
 #define COLOR_BLACK 0
@@ -75,7 +75,7 @@ void display_graphix_clear(graphix gx)
     graphix_rect(gx, BORDER_WIDTH + PIXEL_SPACING + BORDER_PADDING,
 	BORDER_WIDTH + PIXEL_SPACING + SEPARATOR_PADDING
 	+ i * (SEPARATOR_HEIGHT + PIXEL_SPACING + 8 * OFFSET),
-	SP_DISPLAY_WIDTH * OFFSET - PIXEL_SPACING,
+	SP_WIDTH * OFFSET - PIXEL_SPACING,
 	PART_HEIGHT * OFFSET - PIXEL_SPACING, COLOR_BLACK);
 }
 
