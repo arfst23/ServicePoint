@@ -4,7 +4,6 @@ CC		= gcc
 CPPFLAGS	=
 CFLAGS		= -march=native -O3 -funroll-loops -fpic -fstack-protector-all \
 		  -Wall -Wextra -Werror -Wno-deprecated-declarations #-Og -g
-#LDFLAGS		= -L. -lsp -llzma -lX11 -lm
 LDFLAGS		= -L. -lX11 -lm
 REASON		= @if [ -f $@ ]; then echo "[$@: $?]"; else echo "[$@]"; fi
 
@@ -21,8 +20,7 @@ REASON		= @if [ -f $@ ]; then echo "[$@: $?]"; else echo "[$@]"; fi
 
 ################################################################################
 
-#all: spres spclr tty2sp pbm2sp pbms2sp robots bubbles disks tunnel eyes airport watch nichts
-all: tty2sp pbm2sp pbms2sp robots bubbles disks tunnel eyes airport watch nichts
+all: spres spclr tty2sp pbm2sp pbms2sp robots bubbles disks tunnel eyes airport watch nichts
 
 pbm: frame-01.pbm frame-02.pbm frame-03.pbm frame-04.pbm frame-05.pbm \
 	frame-06.pbm frame-07.pbm frame-08.pbm frame-09.pbm frame-10.pbm \

@@ -11,8 +11,6 @@
 
 //******************************************************************************
 
-static unsigned char buf[10+2] = "\x00\x12\x00\x00\x00\x08\x00\x00\x00\x00\xff\xff";
-
 int main(void)
 {
   struct sockaddr_in sin =
@@ -25,7 +23,8 @@ int main(void)
   int sock = socket(sin.sin_family, SOCK_DGRAM, IPPROTO_UDP);
   assert(sock >= 0);
 
-  int sent = sendto(sock, buf, len, 0, (struct sockaddr *)&sin, sizeof sin))
+  static unsigned char cmd[] = "\x00\x02";
+  int sent = sendto(sock, cmd, 2, 0, (struct sockaddr *)&sin, sizeof(sin));
   assert(sent >= 0);
 
   close(sock);
