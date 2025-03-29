@@ -4,7 +4,7 @@ CC		= gcc
 CPPFLAGS	=
 CFLAGS		= -march=native -O3 -funroll-loops -fpic -fstack-protector-all \
 		  -Wall -Wextra -Werror -Wno-deprecated-declarations #-Og -g
-LDFLAGS		= -L. -lX11 -lm
+LDFLAGS		= -lX11 -lm -s
 REASON		= @if [ -f $@ ]; then echo "[$@: $?]"; else echo "[$@]"; fi
 
 .PHONY: tags depend clean distclean
