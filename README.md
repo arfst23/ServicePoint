@@ -1,10 +1,8 @@
 # Service Point Display at CCCB
 
-The access to the Service Point display is done via https://github.com/cccb/servicepoint
-
-Run `build` to create or update this library and header.
-
 Run `make` to build the aps in this repo.
+
+  - `sp.h`, `sp.c`: access to the Service Point Display
 
 ## Service Point Display Tools
 

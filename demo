@@ -53,11 +53,7 @@ spclr
 sleep 3
 
 cat << EOF | tty2sp -s -x
-app
 https://github.com/arfst23/ServicePoint
-
-lib
-https://github.com/cccb/servicepoint
 EOF
-sleep 5
+sleep 10
 spclr
