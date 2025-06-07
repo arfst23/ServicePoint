@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+ffmpeg -f v4l2 -framerate 25 -video_size 640x480 -i /dev/video0 \
+  -vf 'crop=640:338:0:71,scale=448:236' -f image2pipe -vcodec ppm - \
+  | ppms2sp -s

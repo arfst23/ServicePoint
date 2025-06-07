@@ -1,0 +1,58 @@
+#!/usr/bin/python3
+
+import sys
+import subprocess
+import re
+
+if len(sys.argv) < 2:
+  print(f"usage: {sys.argv[0]} VIDEO_FILE ...", file=sys.stderr)
+  sys.exit(1)
+
+for video_file in sys.argv[1:]:
+
+  cmd = [ 'ffprobe', '-v', 'error', '-select_streams', 'v:0', 
+    '-show_entries', 'stream=width,height,r_frame_rate',
+    '-of', 'csv=p=0', video_file ]
+
+  try:
+    info = subprocess.check_output(cmd, universal_newlines=True).strip()
+    width, height, fps_fraction = info.split(',')
+    width = int(width)
+    height = int(height)
+ 
+    # Convert fps fraction (e.g. "24000/1001") to decimal
+    if '/' in fps_fraction:
+      num, den = map(int, fps_fraction.split('/'))
+      fps = num / den
+    else:
+      fps = float(fps_fraction)
+    
+  except subprocess.CalledProcessError as e:
+    print(f"{sys.argv[0]}: failed to get video info: {e}", file=sys.stderr)
+    sys.exit(1)
+
+  print(f"{video_file}: {width}x{height} @ {fps:.2f} fps")
+
+  delay = 1000 // fps
+
+  # output 448x236
+  x_scale = width / 448
+  y_scale = height / 236
+  scale = min(x_scale, y_scale)
+  x_size = int(448 * scale)
+  y_size = int(236 * scale)
+  x_offset = (width - x_size) // 2
+  y_offset = (height - y_size) // 2
+
+  cmd = [ 'ffmpeg', '-i', video_file,
+    '-vf', f'crop={x_size}:{y_size}:{x_offset}:{y_offset},scale=448:236',
+    '-f', 'image2pipe', '-vcodec', 'ppm', '-', '|', 'ppms2sp', '-s', str(-delay) ]
+
+  try:
+    process = subprocess.run(' '.join(cmd), shell=True)
+    if process.returncode != 0:
+      print(f"{sys.argv[0]}: ffmpeg command failed with return code {process.returncode}", file=sys.stderr)
+      sys.exit(1)
+  except subprocess.CalledProcessError as e:
+    print(f"{sys.argv[0]}: failed to run ffmpeg command: {e}", file=sys.stderr) 
+    sys.exit(1)
