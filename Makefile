@@ -20,7 +20,8 @@ REASON		= @if [ -f $@ ]; then echo "[$@: $?]"; else echo "[$@]"; fi
 
 ################################################################################
 
-all: spres spclr tty2sp pbm2sp pbms2sp robots bubbles disks tunnel eyes airport watch nichts
+all: spres spclr tty2sp pbm2sp pbms2sp ppms2sp robots bubbles disks tunnel \
+	eyes airport watch nichts ppms2sp
 
 pbm: frame-01.pbm frame-02.pbm frame-03.pbm frame-04.pbm frame-05.pbm \
 	frame-06.pbm frame-07.pbm frame-08.pbm frame-09.pbm frame-10.pbm \
@@ -79,6 +80,10 @@ watch: watch.o  display_text.o display.o display_graphix.o graphix.o sp.o
 nichts: nichts.o display.o display_graphix.o graphix.o sp.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+ppms2sp: ppms2sp.o display.o display_graphix.o graphix.o sp.o
+	$(REASON)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lnetpbm
 
 ################################################################################
 

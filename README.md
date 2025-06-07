@@ -36,7 +36,7 @@ Run `make` to build the aps in this repo.
     pbm2sp -x -s < frame-01.pbm
     pbms2sp -r -x -s frame-??.pbm
 
-    jpg2sp foo.jpg
+    jpg2sp IMAGE_FILE
 
     mktty | tty2sp -x -s
 
@@ -180,7 +180,7 @@ by an ad for the movie
 ## Watch
 
 Queries [transport.rest](https://transport.rest) for the schedule of train
-station Friedrichstraße. Displays and updates the schedule in a wavy animation.
+station Friedrichstraï¿½e. Displays and updates the schedule in a wavy animation.
 
 ### Options
 
@@ -191,6 +191,21 @@ station Friedrichstraße. Displays and updates the schedule in a wavy animation.
 ### Examples
 
     watch -x -s
+
+## ppms2sp
+
+Display a ppm image stream dithered on the servicepoint display
+
+### Options
+   
+  - `-x`: use service point display emulator
+  - `-s`: send to service point display
+  - `-23`: delay between frames in ms
+
+### Examples
+
+    video2sp VIDEO_FILE
+
 
 ## Demo
 
