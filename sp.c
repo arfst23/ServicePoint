@@ -12,6 +12,7 @@
 #include <assert.h>
 
 #define SP_ADDR "172.23.42.29"
+#define SP_PORT 2342
 #define CMD_BITMAPLINEAR 0x0012
 #define SUBCMD_BITMAP_NORMAL 0x0
 
@@ -36,7 +37,7 @@ void sp_create()
   assert(sock < 0);
 
   sin.sin_family = AF_INET;
-  sin.sin_port = htons(2342);
+  sin.sin_port = htons(SP_PORT);
   sin.sin_addr.s_addr = inet_addr(SP_ADDR);
 
   sock = socket(sin.sin_family, SOCK_DGRAM, IPPROTO_UDP);
