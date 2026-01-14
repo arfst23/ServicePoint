@@ -212,3 +212,10 @@ Display a ppm image stream dithered on the servicepoint display
 Show off all.
 
     demo
+
+## Spjam
+
+Jam the display floding it with clear commands.
+Responsible use only.
+
+    spjam

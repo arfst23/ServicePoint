@@ -36,6 +36,10 @@ spclr: spclr.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
+spjam: spjam.o
+	$(REASON)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
 tty2sp: tty2sp.o display_text.o display.o display_graphix.o graphix.o sp.o
 	$(REASON)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
